@@ -1,6 +1,7 @@
 using GameEngine.Core;
 using GameEngine.Inputs;
 using GameEngine.Mathematics;
+using GameEngine.Rendering;
 using GameEngine.Utils;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
@@ -9,7 +10,7 @@ namespace RubyDung;
 
 public class Game : Engine
 {
-    private uint _shaderProgram;
+    private ShaderProgram _shader = null!;
 
     private float[] _vertices =
     {
@@ -35,74 +36,7 @@ public class Game : Engine
         // shader
         // --------------------------------------------------
 
-        string vertexShaderSource = @"
-            #version 330 core
-            layout (location = 0) in vec3 aPos;
-            layout (location = 1) in vec3 aColor;
-
-            out vec3 ourColor;
-
-            void main()
-            {
-                gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
-
-                ourColor = aColor;
-            }
-        ";
-
-        string fragmentShaderSource = @"
-            #version 330 core
-            out vec4 FragColor;
-
-            in vec3 ourColor;
-
-            void main()
-            {
-                FragColor = vec4(ourColor, 1.0);
-            }
-        ";
-
-        uint vertexShader;
-        vertexShader = _gl.CreateShader(ShaderType.VertexShader);
-        _gl.ShaderSource(vertexShader, vertexShaderSource);
-        _gl.CompileShader(vertexShader);
-
-        int success;
-        string infoLog;
-
-        _gl.GetShader(vertexShader, ShaderParameterName.CompileStatus, out success);
-        if (success == 0)
-        {
-            infoLog = _gl.GetShaderInfoLog(vertexShader);
-            Debug.LogError("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" + infoLog);
-        }
-
-        uint fragmentShader;
-        fragmentShader = _gl.CreateShader(ShaderType.FragmentShader);
-        _gl.ShaderSource(fragmentShader, fragmentShaderSource);
-        _gl.CompileShader(fragmentShader);
-
-        _gl.GetShader(fragmentShader, ShaderParameterName.CompileStatus, out success);
-        if (success == 0)
-        {
-            infoLog = _gl.GetShaderInfoLog(fragmentShader);
-            Debug.LogError("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" + infoLog);
-        }
-
-        _shaderProgram = _gl.CreateProgram();
-        _gl.AttachShader(_shaderProgram, vertexShader);
-        _gl.AttachShader(_shaderProgram, fragmentShader);
-        _gl.LinkProgram(_shaderProgram);
-
-        _gl.GetProgram(_shaderProgram, ProgramPropertyARB.LinkStatus, out success);
-        if (success == 0)
-        {
-            infoLog = _gl.GetProgramInfoLog(_shaderProgram);
-            Debug.LogError("ERROR::SHADER::PROGRAM::LINKING_FAILED\n" + infoLog);
-        }
-
-        _gl.DeleteShader(vertexShader);
-        _gl.DeleteShader(fragmentShader);
+        _shader = new ShaderProgram("base");
 
         // 
         // --------------------------------------------------
@@ -168,12 +102,7 @@ public class Game : Engine
         // shader
         // --------------------------------------------------
 
-        _gl.UseProgram(_shaderProgram);
-
-        float timeValue = Time.ElapsedTime;
-        float greenValue = Mathf.Sin(timeValue) / 2.0f + 0.5f;
-        int vertexColorLocation = _gl.GetUniformLocation(_shaderProgram, "ourColor");
-        _gl.Uniform4(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+        _shader.Use();
 
         // 
         // --------------------------------------------------

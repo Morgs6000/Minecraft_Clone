@@ -9,6 +9,8 @@ namespace GameEngine.Core;
 
 public class Engine
 {
+    public static GL GL = null!;
+
     protected IWindow _window = null!;
     protected GL _gl = null!;
     
@@ -37,6 +39,7 @@ public class Engine
             _window.IsVisible = true;
 
             _gl = _window.CreateOpenGL();
+            GL = _gl;
 
             Screen.Initialize(_window);
             Input.Initialize(_window);
