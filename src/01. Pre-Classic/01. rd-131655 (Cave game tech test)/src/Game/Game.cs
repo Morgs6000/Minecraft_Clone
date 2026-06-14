@@ -190,10 +190,18 @@ public class Game : Engine
         _shader.Use();
 
         Matrix4x4 model = Matrix4x4.Identity;
-        model *= Matrix4x4.Rotate(new Vector3(0.5f, 1.0f, 0.0f), Mathf.Radians(50.0f) * Time.ElapsedTime);
 
         Matrix4x4 view = Matrix4x4.Identity;
-        view *= Matrix4x4.Translate(new Vector3(0.0f, 0.0f, -3.0f));
+
+        const float radius = 10.0f;
+        float camX = Mathf.Sin(Time.ElapsedTime) * radius;
+        float camZ = Mathf.Cos(Time.ElapsedTime) * radius;
+
+        view *= Matrix4x4.LookAt(
+            position: new Vector3(camX, 0.0f, camZ),
+            target:   new Vector3(0.0f, 0.0f, 0.0f),
+            up:       new Vector3(0.0f, 1.0f, 0.0f)
+        );
 
         Matrix4x4 projection = Matrix4x4.Identity;
         projection *= Matrix4x4.Perspective(
