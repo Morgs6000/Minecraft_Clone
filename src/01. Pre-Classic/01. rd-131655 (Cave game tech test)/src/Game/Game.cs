@@ -18,16 +18,56 @@ public class Game : Engine
     private float[] _vertices =
     {
         // positions           // colors           // texture coords
-        -0.5f, -0.5f,  0.0f,   1.0f, 0.0f, 0.0f,   0.0f, 1.0f, // 0
-         0.5f, -0.5f,  0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f, // 1
-         0.5f,  0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f, // 2
-        -0.5f,  0.5f,  0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 0.0f  // 3
+        -0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,   0.0f, 1.0f,         //  0
+        -0.5f, -0.5f,  0.5f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f,         //  1
+        -0.5f,  0.5f,  0.5f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f,         //  2
+        -0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 0.0f,   0.0f, 0.0f,         //  3
+        
+         0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,   0.0f, 1.0f,         //  4
+         0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f,         //  5
+         0.5f,  0.5f, -0.5f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f,         //  6
+         0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 0.0f,   0.0f, 0.0f,         //  7
+        
+        -0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,   0.0f, 1.0f,         //  8
+         0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f,         //  9
+         0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f,         // 10
+        -0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 0.0f,   0.0f, 0.0f,         // 11
+        
+        -0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,   0.0f, 1.0f,         // 12
+         0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f,         // 13
+         0.5f,  0.5f, -0.5f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f,         // 14
+        -0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 0.0f,   0.0f, 0.0f,         // 15
+    
+         0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,   0.0f, 1.0f,         // 16
+        -0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f,         // 17
+        -0.5f,  0.5f, -0.5f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f,         // 18
+         0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 0.0f,   0.0f, 0.0f,         // 19
+        
+        -0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,   0.0f, 1.0f,         // 20
+         0.5f, -0.5f,  0.5f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f,         // 21
+         0.5f,  0.5f,  0.5f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f,         // 22
+        -0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 0.0f,   0.0f, 0.0f          // 23
     };
 
     private uint[] _indices =
     {
-        0, 1, 2, // primeiro triangulo
-        0, 2, 3  // segundo triangulo
+         0,  1,  2, // primeiro triangulo
+         0,  2,  3, // segundo triangulo
+
+         4,  5,  6, // primeiro triangulo
+         4,  6,  7, // segundo triangulo
+
+         8,  9, 10, // primeiro triangulo
+         8, 10, 11, // segundo triangulo
+
+        12, 13, 14, // primeiro triangulo
+        12, 14, 15, // segundo triangulo
+
+        16, 17, 18, // primeiro triangulo
+        16, 18, 19, // segundo triangulo
+
+        20, 21, 22, // primeiro triangulo
+        20, 22, 23  // segundo triangulo
     };
 
     private uint _vertexArrayObject;
@@ -150,7 +190,7 @@ public class Game : Engine
         _shader.Use();
 
         Matrix4x4 model = Matrix4x4.Identity;
-        model *= Matrix4x4.Rotate(new Vector3(1.0f, 0.0f, 0.0f), Mathf.Radians(-55.0f));
+        model *= Matrix4x4.Rotate(new Vector3(0.5f, 1.0f, 0.0f), Mathf.Radians(50.0f) * Time.ElapsedTime);
 
         Matrix4x4 view = Matrix4x4.Identity;
         view *= Matrix4x4.Translate(new Vector3(0.0f, 0.0f, -3.0f));
@@ -179,7 +219,7 @@ public class Game : Engine
 
         unsafe
         {
-            _gl.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, (void*)0);
+            _gl.DrawElements(PrimitiveType.Triangles, (uint)_indices.Length, DrawElementsType.UnsignedInt, (void*)0);
         }
 
         _gl.BindVertexArray(0);

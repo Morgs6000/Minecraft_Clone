@@ -46,6 +46,9 @@ public class Engine
 
             _gl.ClearColor(Color.LightSkyBlue);
 
+            _gl.Enable(EnableCap.DepthTest);
+            _gl.Enable(EnableCap.CullFace);
+
             OnLoad();
         };
 
@@ -66,7 +69,7 @@ public class Engine
 
         _window.Render += deltaTime =>
         {
-            _gl.Clear(ClearBufferMask.ColorBufferBit);
+            _gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             OnRender(deltaTime);
         };
