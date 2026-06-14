@@ -74,6 +74,10 @@ public class Game : Engine
     private uint _vertexBufferObject;
     private uint _elementBufferObject;
 
+    private Vector3 _cameraPos = new Vector3(0.0f, 0.0f, 3.0f);
+    private Vector3 _cameraFront = new Vector3(0.0f, 0.0f, -1.0f);
+    private Vector3 _cameraUp = new Vector3(0.0f, 1.0f, 0.0f);
+
     protected override void OnLoad()
     {
         // shader
@@ -180,6 +184,36 @@ public class Game : Engine
         {
             Close();
         }
+
+        // 
+        // --------------------------------------------------
+
+        float cameraSpeed = 2.5f * Time.DeltaTime;
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            _cameraPos += cameraSpeed * Vector3.Normalize(new Vector3(_cameraFront.X, 0.0f, _cameraFront.Z));
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            _cameraPos -= cameraSpeed * Vector3.Normalize(new Vector3(_cameraFront.X, 0.0f, _cameraFront.Z));
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            _cameraPos -= cameraSpeed * Vector3.Normalize(Vector3.Cross(_cameraFront, _cameraUp));
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            _cameraPos += cameraSpeed * Vector3.Normalize(Vector3.Cross(_cameraFront, _cameraUp));
+        }
+        if (Input.GetKey(KeyCode.Space))
+        {
+            _cameraPos += cameraSpeed * _cameraUp;
+        }
+        if (Input.GetKey(KeyCode.ShiftLeft))
+        {
+            _cameraPos -= cameraSpeed * _cameraUp;
+        }
     }
 
     protected override void OnRender(double deltaTime)
@@ -192,15 +226,10 @@ public class Game : Engine
         Matrix4x4 model = Matrix4x4.Identity;
 
         Matrix4x4 view = Matrix4x4.Identity;
-
-        const float radius = 10.0f;
-        float camX = Mathf.Sin(Time.ElapsedTime) * radius;
-        float camZ = Mathf.Cos(Time.ElapsedTime) * radius;
-
         view *= Matrix4x4.LookAt(
-            position: new Vector3(camX, 0.0f, camZ),
-            target:   new Vector3(0.0f, 0.0f, 0.0f),
-            up:       new Vector3(0.0f, 1.0f, 0.0f)
+            position: _cameraPos,
+            target:   _cameraPos + _cameraFront,
+            up:       _cameraUp
         );
 
         Matrix4x4 projection = Matrix4x4.Identity;
