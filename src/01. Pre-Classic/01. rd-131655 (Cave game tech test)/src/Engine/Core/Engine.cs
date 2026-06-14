@@ -1,3 +1,5 @@
+using GameEngine.Inputs;
+using GameEngine.Mathematics;
 using GameEngine.Utils;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
@@ -37,6 +39,9 @@ public class Engine
             _gl = _window.CreateOpenGL();
 
             Screen.Initialize(_window);
+            Input.Initialize(_window);
+
+            _gl.ClearColor(Color.LightSkyBlue);
 
             OnLoad();
         };
@@ -51,12 +56,15 @@ public class Engine
         _window.Update += deltaTime =>
         {
             Time.Update(deltaTime);
+            Input.NewFrame();
 
             OnUpdate(deltaTime);
         };
 
         _window.Render += deltaTime =>
         {
+            _gl.Clear(ClearBufferMask.ColorBufferBit);
+
             OnRender(deltaTime);
         };
 
@@ -74,11 +82,19 @@ public class Engine
         catch (Exception ex)
         {
             Debug.LogError(
-                "Falha ao criar a janela Silk.NET" 
+                "Falha ao criar a janela Silk.NET"
                 + "\n\n" + ex
                 + "\n\n" + " -- --------------------------------------------------- -- "
             );
         }
+    }
+    
+    // 
+    // --------------------------------------------------
+    
+    public void Close()
+    {
+        _window.Close();
     }
     
     // 
