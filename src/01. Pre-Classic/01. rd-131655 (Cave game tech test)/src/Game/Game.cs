@@ -1,5 +1,6 @@
 using GameEngine.Core;
 using GameEngine.Inputs;
+using GameEngine.Mathematics;
 using GameEngine.Utils;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
@@ -47,9 +48,11 @@ public class Game : Engine
             #version 330 core
             out vec4 FragColor;
 
+            uniform vec4 ourColor;
+
             void main()
             {
-                FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+                FragColor = ourColor;
             }
         ";
 
@@ -152,6 +155,11 @@ public class Game : Engine
         // --------------------------------------------------
 
         _gl.UseProgram(_shaderProgram);
+
+        float timeValue = Time.ElapsedTime;
+        float greenValue = Mathf.Sin(timeValue) / 2.0f + 0.5f;
+        int vertexColorLocation = _gl.GetUniformLocation(_shaderProgram, "ourColor");
+        _gl.Uniform4(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 
         // 
         // --------------------------------------------------
