@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
 using GameEngine.Core;
 using GameEngine.Mathematics;
-using GameEngine.Utils;
+using GameEngine.Utilities;
 using Silk.NET.OpenGL;
 
 namespace GameEngine.Rendering;

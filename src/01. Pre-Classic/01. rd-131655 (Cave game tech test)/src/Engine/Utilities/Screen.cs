@@ -1,6 +1,6 @@
 using Silk.NET.Windowing;
 
-namespace GameEngine.Utils;
+namespace GameEngine.Utilities;
 
 /// <summary>
 /// Acesso para exibir informações.

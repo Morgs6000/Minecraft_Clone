@@ -1,6 +1,7 @@
 using GameEngine.Inputs;
 using GameEngine.Mathematics;
-using GameEngine.Utils;
+using GameEngine.Rendering;
+using GameEngine.Utilities;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
@@ -9,7 +10,8 @@ namespace GameEngine.Core;
 
 public class Engine
 {
-    public static GL GL = null!;
+    public static GL GL { get; private set; } = null!;
+    public static ShadingMode ShadingMode { get; set; } = ShadingMode.Shaded;
 
     protected IWindow _window = null!;
     protected GL _gl = null!;

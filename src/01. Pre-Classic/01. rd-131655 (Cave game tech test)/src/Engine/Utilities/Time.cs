@@ -1,4 +1,4 @@
-namespace GameEngine.Utils;
+namespace GameEngine.Utilities;
 
 /// <summary>
 /// Classe estática responsável pelo gerenciamento de tempo no motor.

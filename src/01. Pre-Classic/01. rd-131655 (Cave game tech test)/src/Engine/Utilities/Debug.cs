@@ -1,4 +1,4 @@
-namespace GameEngine.Utils;
+namespace GameEngine.Utilities;
 
 /// <summary>
 /// Classe contendo métodos para facilitar a depuração durante o desenvolvimento de um jogo.

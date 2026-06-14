@@ -1,18 +1,18 @@
 using GameEngine.Inputs;
 using GameEngine.Mathematics;
-using GameEngine.Utils;
+using GameEngine.Utilities;
 
 namespace GameEngine.Rendering;
 
 public class Camera
 {
     // camera Attributes
-    public Vector3 Position = new Vector3(0.0f, 0.0f, 3.0f);
-    public Vector3 Front = new Vector3(0.0f, 0.0f, -1.0f);
-    public Vector3 Up = new Vector3(0.0f, 1.0f, 0.0f);
+    public Vector3 Position = new Vector3(0.0f, -3.0f, 0.0f);
+    public Vector3 Front = new Vector3(0.0f, 1.0f, 0.0f);
+    public Vector3 Up = new Vector3(0.0f, 0.0f, 1.0f);
 
     // euler Angles
-    public float Yaw = -90.0f;
+    public float Yaw = 90.0f;
     public float Pitch = 0.0f;
 
     // camera options
@@ -71,31 +71,31 @@ public class Camera
     
     private void ProcessKeyboard()
     {
-        float cameraSpeed = MovementSpeed * Time.DeltaTime;
+        float velocity = MovementSpeed * Time.DeltaTime;
 
         if (Input.GetKey(KeyCode.W))
         {
-            Position += cameraSpeed * Vector3.Normalize(new Vector3(Front.X, 0.0f, Front.Z));
+            Position += velocity * Vector3.Normalize(new Vector3(Front.X, Front.Y, 0.0f));
         }
         if (Input.GetKey(KeyCode.S))
         {
-            Position -= cameraSpeed * Vector3.Normalize(new Vector3(Front.X, 0.0f, Front.Z));
+            Position -= velocity * Vector3.Normalize(new Vector3(Front.X, Front.Y, 0.0f));
         }
         if (Input.GetKey(KeyCode.A))
         {
-            Position -= cameraSpeed * Vector3.Normalize(Vector3.Cross(Front, Up));
+            Position -= velocity * Vector3.Normalize(Vector3.Cross(Front, Up));
         }
         if (Input.GetKey(KeyCode.D))
         {
-            Position += cameraSpeed * Vector3.Normalize(Vector3.Cross(Front, Up));
+            Position += velocity * Vector3.Normalize(Vector3.Cross(Front, Up));
         }
         if (Input.GetKey(KeyCode.Space))
         {
-            Position += cameraSpeed * Up;
+            Position += velocity * Up;
         }
         if (Input.GetKey(KeyCode.ShiftLeft))
         {
-            Position -= cameraSpeed * Up;
+            Position -= velocity * Up;
         }
     }
 
@@ -110,14 +110,14 @@ public class Camera
             _firstMouse = false;
         }
 
-        float xoffset = Input.MousePosition.X - _lastPos.X;
+        float xoffset = _lastPos.X - Input.MousePosition.X;
         float yoffset = _lastPos.Y - Input.MousePosition.Y;
         _lastPos = Input.MousePosition;
 
         xoffset *= MouseSensitivity;
         yoffset *= MouseSensitivity;
 
-        Yaw += xoffset;
+        Yaw   += xoffset;
         Pitch += yoffset;
 
         // Certifique-se de que, quando o campo estiver fora dos limites, a tela não seja invertida.
@@ -154,8 +154,8 @@ public class Camera
         Vector3 front;
 
         front.X = Mathf.Cos(Mathf.Radians(Pitch)) * Mathf.Cos(Mathf.Radians(Yaw));
-        front.Y = Mathf.Sin(Mathf.Radians(Pitch));
-        front.Z = Mathf.Cos(Mathf.Radians(Pitch)) * Mathf.Sin(Mathf.Radians(Yaw));
+        front.Y = Mathf.Cos(Mathf.Radians(Pitch)) * Mathf.Sin(Mathf.Radians(Yaw));
+        front.Z = Mathf.Sin(Mathf.Radians(Pitch));
 
         Front = Vector3.Normalize(front);
     }

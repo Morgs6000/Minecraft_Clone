@@ -1,5 +1,5 @@
 using GameEngine.Mathematics;
-using GameEngine.Utils;
+using GameEngine.Utilities;
 using Silk.NET.Input;
 using Silk.NET.Windowing;
 
