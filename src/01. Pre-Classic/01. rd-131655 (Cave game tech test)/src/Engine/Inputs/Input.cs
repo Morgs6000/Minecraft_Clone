@@ -1,3 +1,4 @@
+using GameEngine.Mathematics;
 using GameEngine.Utils;
 using Silk.NET.Input;
 using Silk.NET.Windowing;
@@ -9,7 +10,93 @@ namespace GameEngine.Inputs;
 /// </summary>
 public class Input
 {
+    /// <summary>
+    /// Alguma tecla ou botão do mouse está pressionado no momento? (Somente leitura)
+    /// </summary>
+    public static bool AnyKey => _keys.Count > 0;
+
+    /// <summary>
+    /// Retorna verdadeiro no primeiro frame em que o usuário pressionar qualquer tecla ou botão do mouse. (Somente leitura)
+    /// </summary>
+    public static bool AnyKeyDown => _keys.Count > 0 && _keysPrevious.Count == 0;
+
+    /// <summary>
+    /// Retorna a entrada do teclado inserida neste quadro. (Somente leitura)
+    /// </summary>
+    public static string InputString => _keys.Count > 0 ? _keys.First().ToString() : string.Empty;
+
+    //
+    // --------------------------------------------------
+
+    public static CursorLockMode CursorLockMode
+    {
+        get
+        {
+            CursorMode inputMode = _mouse.Cursor.CursorMode;
+
+            switch (inputMode)
+            {
+                case CursorMode.Normal:
+                    return CursorLockMode.Normal;
+                case CursorMode.Hidden:
+                    return CursorLockMode.Hidden;
+                case CursorMode.Disabled:
+                    return CursorLockMode.Disabled;
+                case CursorMode.Raw:
+                    return CursorLockMode.Raw;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+        set
+        {
+            CursorMode inputMode;
+
+            switch (value)
+            {
+                case CursorLockMode.Normal:
+                    inputMode = CursorMode.Normal;
+                    break;
+                case CursorLockMode.Hidden:
+                    inputMode = CursorMode.Hidden;
+                    break;
+                case CursorLockMode.Disabled:
+                    inputMode = CursorMode.Disabled;
+                    break;
+                case CursorLockMode.Raw:
+                    inputMode = CursorMode.Raw;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            _mouse.Cursor.CursorMode = inputMode;
+        }
+    }
+
+    //
+    // --------------------------------------------------
+
+    public static Vector2 MousePosition => _mouse.Position;
+
+    public static Vector2 MouseScrollDelta
+    {
+        get
+        {
+            var delta = _mouseScrollDelta;
+            _mouseScrollDelta = Vector2.Zero;
+
+            return delta;
+        }
+    }
+
+    private static Vector2 _mouseScrollDelta;
+
+    //
+    // --------------------------------------------------
+
     private static IKeyboard _keyboard = null!;
+    private static IMouse _mouse = null!;
 
     private static HashSet<KeyCode> _keys = [];
     private static HashSet<KeyCode> _keysPrevious = [];
@@ -27,7 +114,14 @@ public class Input
     public static void Initialize(IWindow window)
     {
         IInputContext input = window.CreateInput();
+        
         _keyboard = input.Keyboards[0];
+        _mouse = input.Mice[0];
+
+        _mouse.Scroll += (mouse, scrollWheel) =>
+        {
+            _mouseScrollDelta = new Vector2(scrollWheel.X, scrollWheel.Y);
+        };
     }
 
     //

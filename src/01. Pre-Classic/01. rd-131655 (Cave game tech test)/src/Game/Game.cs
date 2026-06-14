@@ -3,6 +3,7 @@ using GameEngine.Inputs;
 using GameEngine.Mathematics;
 using GameEngine.Rendering;
 using GameEngine.Utils;
+using Silk.NET.Core.Native;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using StbImageSharp;
@@ -77,6 +78,14 @@ public class Game : Engine
     private Vector3 _cameraPos = new Vector3(0.0f, 0.0f, 3.0f);
     private Vector3 _cameraFront = new Vector3(0.0f, 0.0f, -1.0f);
     private Vector3 _cameraUp = new Vector3(0.0f, 1.0f, 0.0f);
+
+    private float _yaw = -90.0f;
+    private float _pitch = 0.0f;
+
+    private bool _firstMouse = true;
+    private Vector2 _lastPos;
+
+    private float _fov = 60.0f;
 
     protected override void OnLoad()
     {
@@ -171,6 +180,11 @@ public class Game : Engine
         // --------------------------------------------------
 
         // _gl.PolygonMode(TriangleFace.FrontAndBack, PolygonMode.Line);
+
+        // 
+        // --------------------------------------------------
+
+        Input.CursorLockMode = CursorLockMode.Raw;
     }
 
     protected override void OnResize(Vector2D<int> newSize)
@@ -214,6 +228,45 @@ public class Game : Engine
         {
             _cameraPos -= cameraSpeed * _cameraUp;
         }
+
+        // 
+        // --------------------------------------------------
+
+        if (_firstMouse)
+        {
+            _lastPos = Input.MousePosition;
+            _firstMouse = false;
+        }
+
+        float xoffset = Input.MousePosition.X - _lastPos.X;
+        float yoffset = _lastPos.Y - Input.MousePosition.Y;
+        _lastPos = Input.MousePosition;
+
+        const float sensitivity = 0.1f;
+        xoffset *= sensitivity;
+        yoffset *= sensitivity;
+
+        _yaw   += xoffset;
+        _pitch += yoffset;
+
+        _pitch = Mathf.Clamp(_pitch, -89.0f, 89.0f);
+
+        // 
+        // --------------------------------------------------
+
+        _fov -= Input.MouseScrollDelta.Y;
+        _fov = Mathf.Clamp(_fov, 1.0f, 180.0f);
+
+        // 
+        // --------------------------------------------------
+
+        Vector3 direction;
+
+        direction.X = Mathf.Cos(Mathf.Radians(_pitch)) * Mathf.Cos(Mathf.Radians(_yaw));
+        direction.Y = Mathf.Sin(Mathf.Radians(_pitch));
+        direction.Z = Mathf.Cos(Mathf.Radians(_pitch)) * Mathf.Sin(Mathf.Radians(_yaw));
+
+        _cameraFront = Vector3.Normalize(direction);
     }
 
     protected override void OnRender(double deltaTime)
@@ -234,7 +287,7 @@ public class Game : Engine
 
         Matrix4x4 projection = Matrix4x4.Identity;
         projection *= Matrix4x4.Perspective(
-            fov: Mathf.Radians(60.0f),
+            fov: Mathf.Radians(_fov),
             aspect: (float)Screen.Width / (float)Screen.Height,
             zNear:  0.3f,
             zFar:   1000.0f
