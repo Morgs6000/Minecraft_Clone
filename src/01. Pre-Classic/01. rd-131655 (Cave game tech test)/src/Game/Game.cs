@@ -5,6 +5,7 @@ using GameEngine.Rendering;
 using GameEngine.Utils;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
+using StbImageSharp;
 
 namespace RubyDung;
 
@@ -12,13 +13,15 @@ public class Game : Engine
 {
     private ShaderProgram _shader = null!;
 
+    private uint _texture;
+
     private float[] _vertices =
     {
-        // positions           // colors
-        -0.5f, -0.5f,  0.0f,   1.0f, 0.0f, 0.0f, // 0
-         0.5f, -0.5f,  0.0f,   0.0f, 1.0f, 0.0f, // 1
-         0.5f,  0.5f,  0.0f,   0.0f, 0.0f, 1.0f, // 2
-        -0.5f,  0.5f,  0.0f,   1.0f, 1.0f, 0.0f  // 3
+        // positions           // colors           // texture coords
+        -0.5f, -0.5f,  0.0f,   1.0f, 0.0f, 0.0f,   0.0f, 1.0f, // 0
+         0.5f, -0.5f,  0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f, // 1
+         0.5f,  0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f, // 2
+        -0.5f,  0.5f,  0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 0.0f  // 3
     };
 
     private uint[] _indices =
@@ -37,6 +40,41 @@ public class Game : Engine
         // --------------------------------------------------
 
         _shader = new ShaderProgram("base");
+
+        // texture
+        // --------------------------------------------------
+
+        _texture = _gl.GenTexture();
+        _gl.BindTexture(TextureTarget.Texture2D, _texture);
+
+        _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+        _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
+
+        _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
+        _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+
+        byte[] buffer = File.ReadAllBytes("res/Textures/container.jpg");
+        ImageResult image = ImageResult.FromMemory(buffer, ColorComponents.RedGreenBlueAlpha);
+
+        try
+        {
+            unsafe
+            {
+                fixed (byte* ptr = image.Data)
+                {
+                    _gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba, (uint)image.Width, (uint)image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, ptr);
+                }
+            }
+            _gl.GenerateMipmap(TextureTarget.Texture2D);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError(
+                "Falha ao carregar a textura."
+                + "\n\n" + ex
+                + "\n\n" + " -- --------------------------------------------------- -- "
+            );
+        }
 
         // 
         // --------------------------------------------------
@@ -67,16 +105,23 @@ public class Game : Engine
         // position attribute
         unsafe
         {
-            _gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), (void*)0);
+            _gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), (void*)0);
         }
         _gl.EnableVertexAttribArray(0);
 
         // color attribute
         unsafe
         {
-            _gl.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+            _gl.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), (void*)(3 * sizeof(float)));
         }
         _gl.EnableVertexAttribArray(1);
+
+        // texture attribute
+        unsafe
+        {
+            _gl.VertexAttribPointer(2, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+        }
+        _gl.EnableVertexAttribArray(2);
 
         // 
         // --------------------------------------------------
@@ -103,6 +148,11 @@ public class Game : Engine
         // --------------------------------------------------
 
         _shader.Use();
+
+        // texture
+        // --------------------------------------------------
+        
+        _gl.BindTexture(TextureTarget.Texture2D, _texture);
 
         // 
         // --------------------------------------------------
