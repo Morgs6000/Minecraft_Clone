@@ -9,8 +9,8 @@ namespace GameEngine.Core;
 
 public class Engine
 {
-    private IWindow _window = null!;
-    private GL _gl = null!;
+    protected IWindow _window = null!;
+    protected GL _gl = null!;
     
     // Construtor
     // --------------------------------------------------
