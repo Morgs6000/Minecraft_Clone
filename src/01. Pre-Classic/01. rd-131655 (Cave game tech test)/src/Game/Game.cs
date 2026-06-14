@@ -149,6 +149,24 @@ public class Game : Engine
 
         _shader.Use();
 
+        Matrix4x4 model = Matrix4x4.Identity;
+        model *= Matrix4x4.Rotate(new Vector3(1.0f, 0.0f, 0.0f), Mathf.Radians(-55.0f));
+
+        Matrix4x4 view = Matrix4x4.Identity;
+        view *= Matrix4x4.Translate(new Vector3(0.0f, 0.0f, -3.0f));
+
+        Matrix4x4 projection = Matrix4x4.Identity;
+        projection *= Matrix4x4.Perspective(
+            fov: Mathf.Radians(60.0f),
+            aspect: (float)Screen.Width / (float)Screen.Height,
+            zNear:  0.3f,
+            zFar:   1000.0f
+        );
+
+        _shader.SetUniform("model", model);
+        _shader.SetUniform("view", view);
+        _shader.SetUniform("projection", projection);
+
         // texture
         // --------------------------------------------------
         

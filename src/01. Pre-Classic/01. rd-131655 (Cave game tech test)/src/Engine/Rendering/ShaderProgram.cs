@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using GameEngine.Core;
+using GameEngine.Mathematics;
 using GameEngine.Utils;
 using Silk.NET.OpenGL;
 
@@ -54,6 +55,99 @@ public class ShaderProgram
     {
         int location = _gl.GetUniformLocation(_program, name);
         _gl.Uniform1(location, value);
+    }
+
+    // Set Uniform2
+    // --------------------------------------------------
+
+    public void SetUniform(string name, float x, float y)
+    {
+        int location = _gl.GetUniformLocation(_program, name);
+        _gl.Uniform2(location, x, y);
+    }
+
+    public void SetUniform(string name, Vector2 vector)
+    {
+        int location = _gl.GetUniformLocation(_program, name);
+        _gl.Uniform2(location, vector);
+    }
+
+    public void SetUniform(string name, int x, int y)
+    {
+        int location = _gl.GetUniformLocation(_program, name);
+        _gl.Uniform2(location, x, y);
+    }
+
+    public void SetUniform(string name, Vector2Int vector)
+    {
+        int location = _gl.GetUniformLocation(_program, name);
+        _gl.Uniform2(location, vector);
+    }
+
+    // Set Uniform3
+    // --------------------------------------------------
+
+    public void SetUniform(string name, float x, float y, float z)
+    {
+        int location = _gl.GetUniformLocation(_program, name);
+        _gl.Uniform3(location, x, y, z);
+    }
+
+    public void SetUniform(string name, Vector3 vector)
+    {
+        int location = _gl.GetUniformLocation(_program, name);
+        _gl.Uniform3(location, vector);
+    }
+
+    public void SetUniform(string name, int x, int y, int z)
+    {
+        int location = _gl.GetUniformLocation(_program, name);
+        _gl.Uniform3(location, x, y, z);
+    }
+
+    public void SetUniform(string name, Vector3Int vector)
+    {
+        int location = _gl.GetUniformLocation(_program, name);
+        _gl.Uniform3(location, vector);
+    }
+
+    // Set Uniform4
+    // --------------------------------------------------
+
+    public void SetUniform(string name, float x, float y, float z, float w)
+    {
+        int location = _gl.GetUniformLocation(_program, name);
+        _gl.Uniform4(location, x, y, z, w);
+    }
+
+    public void SetUniform(string name, Vector4 vector)
+    {
+        int location = _gl.GetUniformLocation(_program, name);
+        _gl.Uniform4(location, vector);
+    }
+
+    public void SetUniform(string name, int x, int y, int z, int w)
+    {
+        int location = _gl.GetUniformLocation(_program, name);
+        _gl.Uniform4(location, x, y, z, w);
+    }
+
+    public void SetUniform(string name, Vector4Int vector)
+    {
+        int location = _gl.GetUniformLocation(_program, name);
+        _gl.Uniform4(location, vector);
+    }
+
+    // Set UniformMatrix4
+    // --------------------------------------------------
+
+    public void SetUniform(string name, Matrix4x4 matrix)
+    {
+        int location = _gl.GetUniformLocation(_program, name);
+        unsafe
+        {
+            _gl.UniformMatrix4(location, 1, false, (float*)&matrix);
+        }
     }
 
     // 
