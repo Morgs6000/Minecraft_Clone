@@ -12,13 +12,21 @@ public class Game : Engine
 
     private float[] _vertices =
     {
-        -0.5f, -0.5f,  0.0f,
-         0.5f, -0.5f,  0.0f,
-         0.0f,  0.5f,  0.0f
+        -0.5f, -0.5f,  0.0f, // 0
+         0.5f, -0.5f,  0.0f, // 1
+         0.5f,  0.5f,  0.0f, // 2
+        -0.5f,  0.5f,  0.0f  // 3
+    };
+
+    private uint[] _indices =
+    {
+        0, 1, 2, // primeiro triangulo
+        0, 2, 3  // segundo triangulo
     };
 
     private uint _vertexArrayObject;
     private uint _vertexBufferObject;
+    private uint _elementBufferObject;
 
     protected override void OnLoad()
     {
@@ -103,11 +111,26 @@ public class Game : Engine
             }
         }
 
+        _elementBufferObject = _gl.GenBuffer();
+        _gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, _elementBufferObject);
+        unsafe
+        {
+            fixed (uint* buf = _indices)
+            {
+                _gl.BufferData(BufferTargetARB.ElementArrayBuffer, (uint)(_indices.Length * sizeof(float)), buf, BufferUsageARB.StaticDraw);
+            }
+        }
+
         unsafe
         {
             _gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), (void*)0);
         }
         _gl.EnableVertexAttribArray(0);
+
+        // 
+        // --------------------------------------------------
+
+        // _gl.PolygonMode(TriangleFace.FrontAndBack, PolygonMode.Line);
     }
 
     protected override void OnResize(Vector2D<int> newSize)
@@ -134,7 +157,13 @@ public class Game : Engine
         // --------------------------------------------------
 
         _gl.BindVertexArray(_vertexArrayObject);
-        _gl.DrawArrays(PrimitiveType.Triangles, 0, 3);
+
+        unsafe
+        {
+            _gl.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, (void*)0);
+        }
+
+        _gl.BindVertexArray(0);
     }
 
     protected override void OnClosing()
