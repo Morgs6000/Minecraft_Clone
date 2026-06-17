@@ -19,6 +19,8 @@ public class Font
     // Renderizador associado à malha
     public MeshRenderer MeshRenderer = null!;
 
+    public int[] CharWidths;
+
     // Largura em pixels de cada caractere ASCII (0-127), calculada na construção
     private int[] _charWidths = new int[256]; // suporta até 256, mas somente 0-127 são preenchidos
 
@@ -75,6 +77,11 @@ public class Font
 
             _charWidths[i] = x; // armazena a largura calculada
         }
+
+        //
+        // --------------------------------------------------
+
+        CharWidths = _charWidths;
     }
 
     // Desenha o texto com uma sombra escura projetada para baixo e para a direita

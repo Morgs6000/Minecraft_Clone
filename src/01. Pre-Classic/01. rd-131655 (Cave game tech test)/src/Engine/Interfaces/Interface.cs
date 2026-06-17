@@ -9,14 +9,17 @@ namespace GameEngine.Interfaces;
 
 public class Interface
 {
+    public static float ScreenWidth { get; private set; }
+    public static float ScreenHeight { get; private set; }
+
+    // 
+    // --------------------------------------------------
+
     private GL _gl = Engine.GL;
 
     private ShaderProgram _shader = null!;
     private Camera _camera = null!;
     private DebugScreen _debugScreen = null!;
-
-    public static float ScreenWidth;
-    public static float ScreenHeight;
 
     private float _scaleFactor = 2.0f;
 

@@ -28,6 +28,9 @@ public class Input
     //
     // --------------------------------------------------
 
+    /// <summary>
+    /// 
+    /// </summary>
     public static CursorLockMode CursorLockMode
     {
         get
