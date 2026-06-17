@@ -13,21 +13,31 @@ public class Engine
     public static GL GL { get; private set; } = null!;
     public static ShadingMode ShadingMode { get; set; } = ShadingMode.Shaded;
 
+    public bool IsVisible;
+    
+    // 
+    // --------------------------------------------------
+
     protected IWindow _window = null!;
     protected GL _gl = null!;
+
+    private Vector2Int _minimumSize;
     
     // Construtor
     // --------------------------------------------------
 
-    public Engine()
+    public Engine(EngineOptions options)
     {
-        WindowOptions options = WindowOptions.Default;
+        WindowOptions windowOptions = WindowOptions.Default;
 
-        options.Size = new Vector2D<int>(800, 600);
-        options.Title = "Game";
-        options.IsVisible = false;
+        windowOptions.Size = new Vector2D<int>(options.Size.X, options.Size.Y);
+        _minimumSize = options.MinimumSize;
+        windowOptions.Title = options.Title;
+        windowOptions.Samples = options.Samples;
 
-        _window = Window.Create(options);
+        windowOptions.IsVisible = false;
+
+        _window = Window.Create(windowOptions);
     }
 
     // 
@@ -56,6 +66,12 @@ public class Engine
 
         _window.Resize += newSize =>
         {
+            if (Screen.Width < _minimumSize.X ||
+                Screen.Height < _minimumSize.Y)
+            {
+                _window.Size = new Vector2D<int>(_minimumSize.X, _minimumSize.Y);
+            }
+
             _gl.Viewport(0, 0, (uint)Screen.Width, (uint)Screen.Height);
 
             OnResize(newSize);
@@ -90,16 +106,16 @@ public class Engine
         catch (Exception ex)
         {
             Debug.LogError(
-                "Falha ao criar a janela Silk.NET"
-                + "\n\n" + ex
-                + "\n\n" + " -- --------------------------------------------------- -- "
+                "Falha ao criar a janela Silk.NET" + "\n\n" +
+                ex + "\n\n" +
+                " -- --------------------------------------------------- -- "
             );
         }
     }
-    
+
     // 
     // --------------------------------------------------
-    
+
     public void Close()
     {
         _window.Close();

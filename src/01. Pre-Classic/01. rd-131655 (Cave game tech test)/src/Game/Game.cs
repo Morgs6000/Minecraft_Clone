@@ -4,22 +4,37 @@ using GameEngine.Interfaces;
 using GameEngine.Mathematics;
 using GameEngine.Meshing;
 using GameEngine.Rendering;
+using GameEngine.Utilities;
+using RubyDung.Level;
 using Silk.NET.Maths;
 
 namespace RubyDung;
 
 public class Game : Engine
 {
-    public static string Version = "rd-131655 (Cave game tech test)";
+    public static string Version = GetRootFolderName.NomeSemPrefixo;
+
+    public static bool DebugScreen = true;
 
     // 
     // --------------------------------------------------
 
     private ShaderProgram _shader = null!;
     private Texture2D _texture = null!;
-    private MeshRenderer _meshRenderer = null!;
+
+    // private MeshRenderer _meshRenderer = null!;
+    private Chunk _chunk = null!;
+
     private Camera _camera = null!;
     private Interface _interface = null!;
+
+    // Construtor
+    // --------------------------------------------------
+
+    public Game(EngineOptions options) : base(options)
+    {
+        
+    }
 
     // 
     // --------------------------------------------------
@@ -39,10 +54,13 @@ public class Game : Engine
         // mesh
         // --------------------------------------------------
 
-        MeshCube mesh = new MeshCube().DefaultWithUV;
+        // MeshCube mesh = new MeshCube().DefaultWithUV;
 
-        _meshRenderer = new MeshRenderer();
-        _meshRenderer.Mesh = mesh;
+        // _meshRenderer = new MeshRenderer();
+        // _meshRenderer.Mesh = mesh;
+
+        _chunk = new Chunk();
+        _chunk.SetupChunk();
 
         // camera
         // --------------------------------------------------
@@ -76,20 +94,14 @@ public class Game : Engine
         // 
         // --------------------------------------------------
 
-        if (Input.GetKey(KeyCode.F3))
+        DebugHotkeys.Update();
+        
+        if (!DebugHotkeys.Pressed)
         {
-            DebugHotkeys.Update();
-        }
-        else
-        {
-            // camera
-            // --------------------------------------------------
             _camera.Update();
-
-            // interface
-            // --------------------------------------------------
-            _interface.Update();
         }
+
+        _interface.Update();
     }
 
     protected override void OnRender(double deltaTime)
@@ -116,12 +128,17 @@ public class Game : Engine
         // mesh
         // --------------------------------------------------
 
-        _meshRenderer.Draw(_shader);
+        // _meshRenderer.Draw(_shader);
+
+        _chunk.Draw(_shader);
 
         // interface
         // --------------------------------------------------
 
-        _interface.Draw();
+        if (DebugScreen)
+        {
+            _interface.Draw();
+        }
     }
 
     protected override void OnClosing()

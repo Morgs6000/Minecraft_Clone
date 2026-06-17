@@ -98,6 +98,17 @@ public struct Mathf
         return System.Math.Max(a, b);
     }
 
+    /// <summary>
+    /// Retorna o maior de dois ou mais valores.
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <returns></returns>
+    public static long Max(long a, long b)
+    {
+        return System.Math.Max(a, b);
+    }
+
     // Min
     // --------------------------------------------------
 

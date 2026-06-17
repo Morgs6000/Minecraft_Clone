@@ -166,9 +166,9 @@ public class ShaderProgram
         catch (Exception ex)
         {
             Debug.LogError(
-                "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: "
-                + "\n\n" + ex
-                + "\n\n" + " -- --------------------------------------------------- -- "
+                "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: " + "\n\n" +
+                ex + "\n\n" +
+                " -- --------------------------------------------------- -- "
             );
         }
 
@@ -230,9 +230,9 @@ public class ShaderProgram
             {
                 infoLog = _gl.GetShaderInfoLog(shader);
                 Debug.LogError(
-                    "ERROR::SHADER_COMPILATION_ERROR of type: " + type
-                    + "\n\n" + infoLog
-                    + "\n" + " -- --------------------------------------------------- -- "
+                    "ERROR::SHADER_COMPILATION_ERROR of type: " + type + "\n\n" +
+                    infoLog + "\n" +
+                    " -- --------------------------------------------------- -- "
                 );
             }
         }
@@ -243,9 +243,9 @@ public class ShaderProgram
             {
                 infoLog = _gl.GetProgramInfoLog(shader);
                 Debug.LogError(
-                    "ERROR::PROGRAM_LINKING_ERROR of type: " + type
-                    + "\n\n" + infoLog
-                    + "\n" + " -- --------------------------------------------------- -- "
+                    "ERROR::PROGRAM_LINKING_ERROR of type: " + type + "\n\n" +
+                    infoLog + "\n" +
+                    " -- --------------------------------------------------- -- "
                 );
             }
         }

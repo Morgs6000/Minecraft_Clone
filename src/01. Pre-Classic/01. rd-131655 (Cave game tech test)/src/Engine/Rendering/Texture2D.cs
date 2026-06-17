@@ -62,9 +62,9 @@ public class Texture2D
         byte[] buffer = File.ReadAllBytes(path);
         ImageResult image = ImageResult.FromMemory(buffer, ColorComponents.RedGreenBlueAlpha);
 
-        Widht = image.Width;
+        Widht  = image.Width;
         Height = image.Height;
-        Data = image.Data;
+        Data   = image.Data;
 
         try
         {
@@ -81,9 +81,9 @@ public class Texture2D
         catch (Exception ex)
         {
             Debug.LogError(
-                "Falha ao carregar a textura."
-                + "\n\n" + ex
-                + "\n\n" + " -- --------------------------------------------------- -- "
+                "Falha ao carregar a textura." + "\n\n" +
+                ex + "\n\n" +
+                " -- --------------------------------------------------- -- "
             );
         }
     }
