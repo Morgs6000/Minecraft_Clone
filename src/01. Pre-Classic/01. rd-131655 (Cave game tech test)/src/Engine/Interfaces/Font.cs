@@ -45,6 +45,7 @@ public class Font
             int xt = i % 16;
             int yt = i / 16;
             int x = 0;
+            
             bool emptyColumn = false;
 
             // Varre as colunas do glifo (8 pixels de largura)

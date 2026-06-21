@@ -13,7 +13,7 @@ public class DebugScreen
     private CpuUsageTracker _cpuTracker = new CpuUsageTracker();
     private Camera _camera = null!;
 
-    private string _version = Game.Version;
+    private string _version = $"{Game.Version}";
 
     private int _frames = 0;
     private float _timeAccumulator = 0.0f;
@@ -24,7 +24,7 @@ public class DebugScreen
 
     private string _shadedMode = "";
 
-    private string _author = "by Morgana Stradivarius";
+    private string _author = $"by Morgana Stradivarius";
 
     private string _memory = "";
     private string _memoryMax = "";
@@ -38,7 +38,7 @@ public class DebugScreen
 
     private string _openGLVersion = $"OpenGL {SystemInfo.OpenGLVersion}";
 
-    private string _dotnetVersion = RuntimeInformation.FrameworkDescription;
+    private string _dotnetVersion = $"{RuntimeInformation.FrameworkDescription}";
 
     public DebugScreen()
     {
@@ -126,6 +126,10 @@ public class DebugScreen
 
         string percent = (total > 0) ? $"{((float)used / total * 100.0f):F0}%" : "N/A";
 
+        // Trocar de :
+        //      Memory: 0 B / 0 B
+        // para:
+        //      Memory: 0 / 0 B
         _memory =
             $"Memory: {percent} " +
             $"{SystemInfo.FormatBytes(used)} / " +
