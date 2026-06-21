@@ -4,6 +4,7 @@ using GameEngine.Mathematics;
 using GameEngine.Rendering;
 using GameEngine.Utilities;
 using RubyDung;
+using RubyDung.Level;
 
 namespace GameEngine.Interfaces;
 
@@ -21,6 +22,7 @@ public class DebugScreen
 
     private string _cameraPos = "";
     private string _cameraDir = "";
+    private string _chunkPos = "";
 
     private string _shadedMode = "";
 
@@ -70,23 +72,26 @@ public class DebugScreen
         _font.DrawShadow(_fpsString , 2, h - 12, 16777215);
 
         _font.DrawShadow(_cameraPos , 2, h - 32, 16777215);
-        _font.DrawShadow(_cameraDir , 2, h - 42, 16777215);
-        _font.DrawShadow(_shadedMode, 2, h - 52, 16777215);
+        _font.DrawShadow(_chunkPos  , 2, h - 42, 16777215);
+        _font.DrawShadow(_cameraDir , 2, h - 52, 16777215);
+        
+        _font.DrawShadow(_shadedMode, 2, h - 72, 16777215);
 
         _font.DrawShadow(_author    , 2,      2, 16777215);
 
         // --- Texto a direita ---
 
         _font.DrawShadow(_dotnetVersion, w - MeasureString(_dotnetVersion), h - 2, 16777215);
-        _font.DrawShadow(_memory, w - MeasureString(_memory)   , h - 12, 16777215);
-        _font.DrawShadow(_memoryMax, w - MeasureString(_memoryMax), h - 22, 16777215);
 
-        _font.DrawShadow(_cpu0, w - MeasureString(_cpu0), h - 42, 16777215);
-        _font.DrawShadow(_cpu1, w - MeasureString(_cpu1), h - 52, 16777215);
+        _font.DrawShadow(_memory, w - MeasureString(_memory)   , h - 22, 16777215);
+        _font.DrawShadow(_memoryMax, w - MeasureString(_memoryMax), h - 32, 16777215);
 
-        _font.DrawShadow(_display, w - MeasureString(_display), h - 72, 16777215);
+        _font.DrawShadow(_cpu0, w - MeasureString(_cpu0), h - 52, 16777215);
+        _font.DrawShadow(_cpu1, w - MeasureString(_cpu1), h - 62, 16777215);
 
-        _font.DrawShadow(_openGLVersion, w - MeasureString(_openGLVersion), h - 92, 16777215);
+        _font.DrawShadow(_display, w - MeasureString(_display), h - 82, 16777215);
+
+        _font.DrawShadow(_openGLVersion, w - MeasureString(_openGLVersion), h - 102, 16777215);
 
         _font.MeshRenderer.Mesh = _font.Mesh;
     }
@@ -107,8 +112,9 @@ public class DebugScreen
 
         if (_timeAccumulator >= 1.0f)
         {
-            _fpsString = $"{_frames} fps";
+            _fpsString = $"{_frames} fps, {Chunk.Updates} chunk updates";            
             _frames = 0;
+            Chunk.Updates = 0;
 
             CalculateMemory();
             CalculateCPU();
@@ -153,10 +159,15 @@ public class DebugScreen
 
     private void CalculateCameraPos()
     {
-        _cameraPos =
-            $"X: {_camera.Position.X:F3}, " +
-            $"Y: {_camera.Position.Y:F3}, " +
-            $"Z: {_camera.Position.Z:F3}";
+        _cameraPos = $"XYZ: " + 
+            $"{_camera.Position.X:F3} / " +
+            $"{_camera.Position.Y:F3} / " +
+            $"{_camera.Position.Z:F3}";
+
+        _chunkPos = $"Chunk: " + 
+            $"{Mathf.FloorToInt(_camera.Position.X / World.ChunkSize)} " +
+            $"{Mathf.FloorToInt(_camera.Position.Y / World.ChunkSize)} " +
+            $"{Mathf.FloorToInt(_camera.Position.Z / World.ChunkSize)}";
     }
 
     private void CalculateCameraDir()
@@ -206,7 +217,7 @@ public class DebugScreen
             dir = "East (Positive X) ";
         }
 
-        _cameraDir = $"Dir: {dir} {yaw:F0}";
+        _cameraDir = $"Facing: {dir} {yaw:F0}";
     }
     
     private int MeasureString(string str)

@@ -62,6 +62,14 @@ public struct TexCoord
         V = value;
     }
 
+    // To String
+    // --------------------------------------------------
+
+    public override string ToString()
+    {
+        return $"{U}, {V}";
+    }
+
     // Conversão Implicita
     // --------------------------------------------------
 

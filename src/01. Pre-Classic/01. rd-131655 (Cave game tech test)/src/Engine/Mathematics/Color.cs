@@ -281,6 +281,11 @@ public struct Color
     // To String
     // --------------------------------------------------
 
+    public override string ToString()
+    {
+        return $"{R}, {G}, {B}, {A}";
+    }
+
     public string ToFloatString()
     {
         return $"RGBA: {R:F3}, {G:F3}, {B:F3}, {A:F3}";
@@ -303,7 +308,7 @@ public struct Color
             : $"Hex: #{r:X2}{g:X2}{b:X2}";
     }
 
-    public string ToHsvString()
+    public string ToHsvFloatString()
     {
         float max = Mathf.Max(R, Mathf.Max(G, B));
         float min = Mathf.Min(R, Mathf.Min(G, B));

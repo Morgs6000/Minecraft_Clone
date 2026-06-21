@@ -66,10 +66,13 @@ public class Engine
 
         _window.Resize += newSize =>
         {
-            if (Screen.Width < _minimumSize.X ||
-                Screen.Height < _minimumSize.Y)
+            if (Screen.Width < _minimumSize.X)
             {
-                _window.Size = new Vector2D<int>(_minimumSize.X, _minimumSize.Y);
+                _window.Size = new Vector2D<int>(_minimumSize.X, _window.Size.Y);
+            }
+            if (Screen.Height < _minimumSize.Y)
+            {
+                _window.Size = new Vector2D<int>(_window.Size.X, _minimumSize.Y);
             }
 
             _gl.Viewport(0, 0, (uint)Screen.Width, (uint)Screen.Height);

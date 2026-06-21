@@ -133,4 +133,27 @@ public struct Mathf
     {
         return System.Math.Min(a, b);
     }
+
+    // Flor
+    // --------------------------------------------------
+
+    /// <summary>
+    /// Retorna o maior número inteiro menor ou igual a f.
+    /// </summary>
+    /// <param name="f"></param>
+    /// <returns></returns>
+    public static float Floor(float f)
+    {
+        return (float)System.Math.Floor(f);
+    }
+
+    /// <summary>
+    /// Retorna o maior número inteiro menor ou igual a f.
+    /// </summary>
+    /// <param name="f"></param>
+    /// <returns></returns>
+    public static int FloorToInt(float f)
+    {
+        return (int)System.Math.Floor(f);
+    }
 }

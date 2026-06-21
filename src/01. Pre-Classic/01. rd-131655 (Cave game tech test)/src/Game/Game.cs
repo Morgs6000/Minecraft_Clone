@@ -23,7 +23,8 @@ public class Game : Engine
     private Texture2D _texture = null!;
 
     // private MeshRenderer _meshRenderer = null!;
-    private Chunk _chunk = null!;
+    // private Chunk _chunk = null!;
+    private World _world = null!;
 
     private Camera _camera = null!;
     private Interface _interface = null!;
@@ -59,8 +60,11 @@ public class Game : Engine
         // _meshRenderer = new MeshRenderer();
         // _meshRenderer.Mesh = mesh;
 
-        _chunk = new Chunk();
-        _chunk.SetupChunk();
+        // _chunk = new Chunk(new Vector3Int(0, 0, 0));
+        // _chunk.SetupChunk();
+
+        _world = new World();
+        _world.SetupWorld();
 
         // camera
         // --------------------------------------------------
@@ -130,7 +134,9 @@ public class Game : Engine
 
         // _meshRenderer.Draw(_shader);
 
-        _chunk.Draw(_shader);
+        // _chunk.Draw(_shader);
+
+        _world.Draw(_shader);
 
         // interface
         // --------------------------------------------------

@@ -23,11 +23,21 @@ public class Camera
     private bool _firstMouse = true;
     private Vector2 _lastPos;
 
+    // private float _walking       = 4.317f;
+    // private float _sprinting     = 5.612f;
+    // private float _sneaking      = 1.295f;
+    // private float _flying        = 10.79f;
+    private float _sprint_flying = 21.58f;
+    // private float _falling       = 77.71f;
+    // private float _jumping       = 1.2522f;
+
     // Construtor
     // --------------------------------------------------
 
     public Camera()
     {
+        MovementSpeed = _sprint_flying;
+
         Input.CursorLockMode = CursorLockMode.Raw;
     }
 

@@ -65,6 +65,14 @@ public struct Vector2
         Y = value;
     }
 
+    // To String
+    // --------------------------------------------------
+
+    public override string ToString()
+    {
+        return $"{X}, {Y}";
+    }
+
     // Conversão Implicita
     // --------------------------------------------------
 

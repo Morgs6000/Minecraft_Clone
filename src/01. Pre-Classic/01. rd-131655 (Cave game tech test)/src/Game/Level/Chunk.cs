@@ -1,24 +1,39 @@
+using GameEngine.Mathematics;
 using GameEngine.Meshing;
 using GameEngine.Rendering;
+using GameEngine.Utilities;
 
 namespace RubyDung.Level;
 
 public class Chunk
 {
+    public static int Updates;
+
+    // 
+    // --------------------------------------------------
+
+    private World _world;
+
     private MeshCube _mesh = null!;
     private MeshRenderer _meshRenderer = null!;
 
-    private readonly int _chunkSize = 16;
+    private readonly int _size = World.ChunkSize;
 
     private byte[] _blocks = [];
+
+    private readonly Vector3Int _position;
 
     // Construtor
     // --------------------------------------------------
 
-    public Chunk()
+    public Chunk(World world, Vector3Int position)
     {
+        _world = world;
+
         _mesh = new MeshCube();
         _meshRenderer = new MeshRenderer();
+
+        _position = position;
 
         PopulateBlocks();
     }
@@ -28,16 +43,18 @@ public class Chunk
 
     public void PopulateBlocks()
     {
-        _blocks = new byte[_chunkSize * _chunkSize * _chunkSize];
+        // Debug.Log($"PopulateBlock no chunk {_position}");
 
-        for (int x = 0; x < _chunkSize; x++)
+        _blocks = new byte[_size * _size * _size];
+
+        for (int x = 0; x < _size; x++)
         {
-            for (int y = 0; y < _chunkSize; y++)
+            for (int y = 0; y < _size; y++)
             {
-                for (int z = 0; z < _chunkSize; z++)
+                for (int z = 0; z < _size; z++)
                 {
-                    int i = (y * _chunkSize + z) * _chunkSize + x;
-                    _blocks[i] = 1;
+                    int i = (y * _size + z) * _size + x;
+                    _blocks[i] = (byte)(z + _position.Z <= World.Size.Z * 2 / 3 ? 1 : 0);
                 }
             }
         }
@@ -48,17 +65,33 @@ public class Chunk
 
     public void SetupChunk()
     {
+        Updates++;
+
         _mesh.Clear();
 
-        for (int x = 0; x < _chunkSize; x++)
+        //*
+        Random random = new Random();
+
+        _mesh.SetColors(
+            (float)random.NextDouble(),
+            (float)random.NextDouble(),
+            (float)random.NextDouble()
+        );
+        //*/
+
+        for (int x = 0; x < _size; x++)
         {
-            for (int y = 0; y < _chunkSize; y++)
+            for (int y = 0; y < _size; y++)
             {
-                for (int z = 0; z < _chunkSize; z++)
+                for (int z = 0; z < _size; z++)
                 {
                     if (IsBlock(x, y, z))
                     {
-                        SetupBlock(x, y, z);
+                        SetupBlock(
+                            x + _position.X,
+                            y + _position.Y,
+                            z + _position.Z
+                        );
                     }
                 }
             }
@@ -73,6 +106,22 @@ public class Chunk
     public void Draw(ShaderProgram shader)
     {
         _meshRenderer.Draw(shader);
+    }
+
+    // 
+    // --------------------------------------------------
+
+    public bool IsBlock(int x, int y, int z)
+    {
+        if (x >= 0 && x < _size &&
+            y >= 0 && y < _size &&
+            z >= 0 && z < _size)
+        {
+            int i = (y * _size + z) * _size + x;
+            return _blocks[i] == 1;
+        }
+
+        return false;
     }
 
     // 
@@ -103,24 +152,11 @@ public class Chunk
         if (!IsSolidBlock(x, y, z + 1))
         {
             _mesh.RenderFaceWithUV(x, y, z, MeshQuadFace.Positive_Z);
-        }
-    }
-
-    private bool IsBlock(int x, int y, int z)
-    {
-        if (x >= 0 && x < _chunkSize &&
-            y >= 0 && y < _chunkSize &&
-            z >= 0 && z < _chunkSize)
-        {
-            int i = (y * _chunkSize + z) * _chunkSize + x;
-            return _blocks[i] == 1;
-        }
-
-        return false;
+        }      
     }
 
     private bool IsSolidBlock(int x, int y, int z)
     {
-        return IsBlock(x, y, z);
+        return _world.IsSolidBlock(x, y, z);
     }
 }

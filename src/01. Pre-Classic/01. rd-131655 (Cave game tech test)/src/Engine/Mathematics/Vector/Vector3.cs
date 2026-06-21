@@ -93,6 +93,14 @@ public struct Vector3
         Z = z;
     }
 
+    // To String
+    // --------------------------------------------------
+
+    public override string ToString()
+    {
+        return $"{X}, {Y}, {Z}";
+    }
+
     // Conversão Implicita
     // --------------------------------------------------
 

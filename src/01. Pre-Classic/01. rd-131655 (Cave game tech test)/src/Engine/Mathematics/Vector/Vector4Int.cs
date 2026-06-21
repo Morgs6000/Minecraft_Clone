@@ -101,6 +101,14 @@ public struct Vector4Int
         W = w;
     }
 
+    // To String
+    // --------------------------------------------------
+
+    public override string ToString()
+    {
+        return $"{X}, {Y}, {Z}, {W}";
+    }
+
     // Conversão Implicita
     // --------------------------------------------------
 
