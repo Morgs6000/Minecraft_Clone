@@ -21,12 +21,9 @@ public class Game : Engine
 
     private ShaderProgram _shader = null!;
     private Texture2D _texture = null!;
-
-    // private MeshRenderer _meshRenderer = null!;
-    // private Chunk _chunk = null!;
     private World _world = null!;
 
-    private Camera _camera = null!;
+    private Player _player = null!;
     private Interface _interface = null!;
 
     // Construtor
@@ -50,37 +47,24 @@ public class Game : Engine
         // texture
         // --------------------------------------------------
 
-        _texture = new Texture2D("container");
+        _texture = new Texture2D("terrain");
 
         // mesh
         // --------------------------------------------------
 
-        // MeshCube mesh = new MeshCube().DefaultWithUV;
-
-        // _meshRenderer = new MeshRenderer();
-        // _meshRenderer.Mesh = mesh;
-
-        // _chunk = new Chunk(new Vector3Int(0, 0, 0));
-        // _chunk.SetupChunk();
-
-        _world = new World();
+        _world = new World(256, 256, 64);
         _world.SetupWorld();
 
         // camera
         // --------------------------------------------------
 
-        _camera = new Camera();
+        _player = new Player(_world);
 
         // interface
         // --------------------------------------------------
 
         _interface = new Interface();
-        _interface.SetCamera(_camera);
-
-        // 
-        // --------------------------------------------------
-
-        // _gl.PolygonMode(TriangleFace.FrontAndBack, PolygonMode.Line);
+        _interface.SetCamera(_player);
     }
 
     protected override void OnResize(Vector2D<int> newSize)
@@ -102,7 +86,7 @@ public class Game : Engine
         
         if (!DebugHotkeys.Pressed)
         {
-            _camera.Update();
+            _player.Update();
         }
 
         _interface.Update();
@@ -118,10 +102,10 @@ public class Game : Engine
         Matrix4x4 model = Matrix4x4.Identity;
         _shader.SetUniform("model", model);
 
-        Matrix4x4 view = _camera.GetViewMatrix();
+        Matrix4x4 view = _player.GetViewMatrix();
         _shader.SetUniform("view", view);
 
-        Matrix4x4 projection = _camera.GetProjectionMatrix();
+        Matrix4x4 projection = _player.GetProjectionMatrix();
         _shader.SetUniform("projection", projection);
 
         // texture
@@ -131,10 +115,6 @@ public class Game : Engine
 
         // mesh
         // --------------------------------------------------
-
-        // _meshRenderer.Draw(_shader);
-
-        // _chunk.Draw(_shader);
 
         _world.Draw(_shader);
 

@@ -20,24 +20,14 @@ public class Camera
     public float MouseSensitivity = 0.1f;
     public float Zoom = 60.0f;
 
-    private bool _firstMouse = true;
-    private Vector2 _lastPos;
-
-    // private float _walking       = 4.317f;
-    // private float _sprinting     = 5.612f;
-    // private float _sneaking      = 1.295f;
-    // private float _flying        = 10.79f;
-    private float _sprint_flying = 21.58f;
-    // private float _falling       = 77.71f;
-    // private float _jumping       = 1.2522f;
+    protected bool _firstMouse = true;
+    protected Vector2 _lastPos;
 
     // Construtor
     // --------------------------------------------------
 
     public Camera()
     {
-        MovementSpeed = _sprint_flying;
-
         Input.CursorLockMode = CursorLockMode.Raw;
     }
 
@@ -48,7 +38,7 @@ public class Camera
     {
         ProcessKeyboard();
         ProcessMouseMovement();
-        ProcessMouseScroll();
+        // ProcessMouseScroll();
     }
 
     // Retorna a matriz de visualização calculada usando os ângulos de Euler e a matriz LookAt.
@@ -65,21 +55,21 @@ public class Camera
 
     // Retorna a matriz de projeção.
     // --------------------------------------------------
-    
+
     public Matrix4x4 GetProjectionMatrix()
     {
         return Matrix4x4.Perspective(
             fov: Mathf.Radians(Zoom),
             aspect: (float)Screen.Width / (float)Screen.Height,
-            zNear:  0.3f,
-            zFar:   1000.0f
+            zNear: 0.3f,
+            zFar: 1000.0f
         );
     }
 
     // Processa a entrada recebida de qualquer sistema de entrada semelhante a um teclado. Aceita parâmetros de entrada na forma de um ENUM definido pela câmera (para abstraí-lo dos sistemas de janelas).
-    // --------------------------------------------------
-    
-    private void ProcessKeyboard()
+    // --------------------------------------------------    
+
+    protected virtual void ProcessKeyboard()
     {
         float velocity = MovementSpeed * Time.DeltaTime;
 
@@ -110,9 +100,9 @@ public class Camera
     }
 
     // Processa a entrada recebida de um sistema de entrada de mouse. Espera o valor de deslocamento nas direções x e y.
-    // --------------------------------------------------
-    
-    private void ProcessMouseMovement(bool constrainPitch = true)
+    // --------------------------------------------------    
+
+    protected virtual void ProcessMouseMovement(bool constrainPitch = true)
     {
         if (_firstMouse)
         {
@@ -127,7 +117,7 @@ public class Camera
         xoffset *= MouseSensitivity;
         yoffset *= MouseSensitivity;
 
-        Yaw   += xoffset;
+        Yaw += xoffset;
         Pitch += yoffset;
 
         // Certifique-se de que, quando o campo estiver fora dos limites, a tela não seja invertida.
@@ -147,7 +137,7 @@ public class Camera
     // Processa a entrada recebida de um evento de rolagem do mouse. Requer entrada apenas no eixo vertical da roda.
     // --------------------------------------------------
     
-    private void ProcessMouseScroll()
+    protected virtual void ProcessMouseScroll()
     {
         Zoom -= Input.MouseScrollDelta.Y;
         Zoom = Mathf.Clamp(Zoom, 1.0f, 180.0f);
@@ -155,8 +145,8 @@ public class Camera
 
     // Calcula o vetor frontal a partir dos ângulos de Euler (atualizados) da câmera.
     // --------------------------------------------------
-    
-    private void UpdateCameraVectors()
+
+    protected virtual void UpdateCameraVectors()
     {
         // calcular o novo vetor Front
         // --------------------------------------------------

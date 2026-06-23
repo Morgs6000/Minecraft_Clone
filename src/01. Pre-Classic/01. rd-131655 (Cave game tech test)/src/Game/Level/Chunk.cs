@@ -1,7 +1,6 @@
 using GameEngine.Mathematics;
 using GameEngine.Meshing;
 using GameEngine.Rendering;
-using GameEngine.Utilities;
 
 namespace RubyDung.Level;
 
@@ -20,6 +19,9 @@ public class Chunk
     private readonly int _size = World.ChunkSize;
 
     private byte[] _blocks = [];
+    private int[] _lightDepths = [];
+
+    public List<LevelListener> _levelListerners = new List<LevelListener>();
 
     private readonly Vector3Int _position;
 
@@ -46,6 +48,7 @@ public class Chunk
         // Debug.Log($"PopulateBlock no chunk {_position}");
 
         _blocks = new byte[_size * _size * _size];
+        _lightDepths = new int[_world.Width * _world.Depth];
 
         for (int x = 0; x < _size; x++)
         {
@@ -54,10 +57,12 @@ public class Chunk
                 for (int z = 0; z < _size; z++)
                 {
                     int i = (y * _size + z) * _size + x;
-                    _blocks[i] = (byte)(z + _position.Z <= World.Size.Z * 2 / 3 ? 1 : 0);
+                    _blocks[i] = (byte)(z + _position.Z <= _world.Height * 2 / 3 ? 1 : 0);
                 }
             }
         }
+
+        // CalcLightDepths(0, 0, _world.Width, _world.Depth);
     }
 
     // 
@@ -69,15 +74,7 @@ public class Chunk
 
         _mesh.Clear();
 
-        //*
-        Random random = new Random();
-
-        _mesh.SetColors(
-            (float)random.NextDouble(),
-            (float)random.NextDouble(),
-            (float)random.NextDouble()
-        );
-        //*/
+        // ApplyRandonColor();
 
         for (int x = 0; x < _size; x++)
         {
@@ -87,11 +84,22 @@ public class Chunk
                 {
                     if (IsBlock(x, y, z))
                     {
-                        SetupBlock(
+                        int tex = z + _position.Z == _world.Height * 2 / 3 ? 0 : 1;
+
+                        Vector3Int position = new Vector3Int(
                             x + _position.X,
                             y + _position.Y,
                             z + _position.Z
                         );
+
+                        if (tex == 0)
+                        {
+                            Block.Rock.SetupBlock(_mesh, this, position);
+                        }
+                        else
+                        {
+                            Block.Grass.SetupBlock(_mesh, this, position);
+                        }
                     }
                 }
             }
@@ -124,39 +132,32 @@ public class Chunk
         return false;
     }
 
+    public bool IsSolidBlock(int x, int y, int z)
+    {
+        return _world.IsSolidBlock(x, y, z);
+    }
+
+    public void CalcLightDepths(int x0, int y0, int x1, int y1)
+    {
+        _world.CalcLightDepths(x0, y0, x1, y1);
+    }
+
+    public float GetBrightness(int x, int y, int z)
+    {
+        return _world.GetBrightness(x, y, z);
+    }
+
     // 
     // --------------------------------------------------
 
-    private void SetupBlock(int x, int y, int z)
+    private void ApplyRandonColor()
     {
-        if (!IsSolidBlock(x - 1, y, z))
-        {
-            _mesh.RenderFaceWithUV(x, y, z, MeshQuadFace.Negative_X);
-        }
-        if (!IsSolidBlock(x + 1, y, z))
-        {
-            _mesh.RenderFaceWithUV(x, y, z, MeshQuadFace.Positive_X);
-        }
-        if (!IsSolidBlock(x, y - 1, z))
-        {
-            _mesh.RenderFaceWithUV(x, y, z, MeshQuadFace.Negative_Y);
-        }
-        if (!IsSolidBlock(x, y + 1, z))
-        {
-            _mesh.RenderFaceWithUV(x, y, z, MeshQuadFace.Positive_Y);
-        }
-        if (!IsSolidBlock(x, y, z - 1))
-        {
-            _mesh.RenderFaceWithUV(x, y, z, MeshQuadFace.Negative_Z);
-        }
-        if (!IsSolidBlock(x, y, z + 1))
-        {
-            _mesh.RenderFaceWithUV(x, y, z, MeshQuadFace.Positive_Z);
-        }      
-    }
+        Random random = new Random();
 
-    private bool IsSolidBlock(int x, int y, int z)
-    {
-        return _world.IsSolidBlock(x, y, z);
+        _mesh.SetColors(
+            (float)random.NextDouble(),
+            (float)random.NextDouble(),
+            (float)random.NextDouble()
+        );
     }
 }

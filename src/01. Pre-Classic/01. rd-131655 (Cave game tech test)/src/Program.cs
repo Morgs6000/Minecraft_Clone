@@ -20,6 +20,7 @@ public class Program
         options.Size = new Vector2Int(1024, 768);
         options.MinimumSize = new Vector2Int(800, 600);
         options.Title = "Game";
+        // options.Samples = 4;
 
         Game game = new Game(options);
         game.Run();
