@@ -37,6 +37,9 @@ void main()
 
     if (hasTexture) 
     {
+        result *= texture(ourTexture, TexCoord);
+
+        /*
         vec4 texColor = texture(ourTexture, TexCoord);
         if(texColor.a < 0.1f)
         {
@@ -44,6 +47,7 @@ void main()
         }
 
         result *= texColor;
+        */
     }
 
     // FragColor

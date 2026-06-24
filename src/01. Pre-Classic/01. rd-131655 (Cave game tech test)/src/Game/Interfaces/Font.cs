@@ -2,7 +2,7 @@ using GameEngine.Mathematics;
 using GameEngine.Meshing;
 using GameEngine.Rendering;
 
-namespace GameEngine.Interfaces;
+namespace RubyDung.Interfaces;
 
 /// <summary>
 /// Representa uma fonte bitmap monocromática carregada a partir de uma textura.

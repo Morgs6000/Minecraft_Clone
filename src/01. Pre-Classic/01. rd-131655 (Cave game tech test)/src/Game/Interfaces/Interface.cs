@@ -5,7 +5,7 @@ using GameEngine.Utilities;
 using RubyDung;
 using Silk.NET.OpenGL;
 
-namespace GameEngine.Interfaces;
+namespace RubyDung.Interfaces;
 
 public class Interface
 {
@@ -18,7 +18,9 @@ public class Interface
     private GL _gl = Engine.GL;
 
     private ShaderProgram _shader = null!;
-    private Camera _camera = null!;
+    private Player _player = null!;
+
+    private GameModeSwitcher _gameModeSwitcher = null!;
     private DebugScreen _debugScreen = null!;
 
     private float _scaleFactor = 2.0f;
@@ -28,10 +30,21 @@ public class Interface
 
     public Interface()
     {
+        // screen size
+        // --------------------------------------------------
+
+        ScreenWidth = Screen.Width / _scaleFactor;
+        ScreenHeight = Screen.Height / _scaleFactor;
+
         // shader
         // --------------------------------------------------
 
         _shader = new ShaderProgram("interface");
+
+        // game mode switcher
+        // --------------------------------------------------
+
+        _gameModeSwitcher = new GameModeSwitcher();
 
         // debug screen
         // --------------------------------------------------
@@ -42,9 +55,9 @@ public class Interface
     // 
     // --------------------------------------------------
 
-    public void SetCamera(Camera camera)
+    public void SetCamera(Player player)
     {
-        _camera = camera;
+        _player = player;
     }
 
     // 
@@ -61,7 +74,7 @@ public class Interface
         // debug screen
         // --------------------------------------------------
 
-        _debugScreen.SetCamera(_camera);
+        _debugScreen.SetCamera(_player);
         _debugScreen.Update();
     }
 
@@ -84,12 +97,21 @@ public class Interface
         Matrix4x4 projection = GetProjectionMatrix();
         _shader.SetUniform("projection", projection);
 
-        // debug screen
-        // --------------------------------------------------
-
         _gl.Disable(EnableCap.DepthTest);
 
-        _debugScreen.Draw(_shader);
+        {
+
+            // game mode switcher
+            // --------------------------------------------------
+
+            _gameModeSwitcher.Draw(_shader);
+
+            // debug screen
+            // --------------------------------------------------
+
+            _debugScreen.Draw(_shader);
+
+        }
 
         _gl.Enable(EnableCap.DepthTest);
     }

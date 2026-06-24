@@ -366,6 +366,24 @@ public struct Color
 
         return $"HSV: {hi}, {si}, {vi}";
     }
+
+    public string ToDecimalString(bool includeAlpha = false)
+    {
+        int r = (int)(R * 255);
+        int g = (int)(G * 255);
+        int b = (int)(B * 255);
+        int a = (int)(A * 255);
+
+        int value;
+        if (includeAlpha)
+            value = (a << 24) | (r << 16) | (g << 8) | b;  // formato ARGB
+        else
+            value = (r << 16) | (g << 8) | b;              // formato RGB (24 bits)
+
+        return includeAlpha
+            ? $"Decimal (ARGB): {value}"
+            : $"Decimal (RGB): {value}";
+    }
     
     // Conversão Implicita
     // --------------------------------------------------

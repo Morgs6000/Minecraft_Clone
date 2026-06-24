@@ -61,6 +61,9 @@ public class Engine
             _gl.Enable(EnableCap.DepthTest);
             _gl.Enable(EnableCap.CullFace);
 
+            _gl.Enable(EnableCap.Blend);
+            _gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+
             OnLoad();
         };
 

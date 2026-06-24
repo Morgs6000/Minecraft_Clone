@@ -1,10 +1,9 @@
 using GameEngine.Core;
 using GameEngine.Inputs;
-using GameEngine.Interfaces;
 using GameEngine.Mathematics;
-using GameEngine.Meshing;
 using GameEngine.Rendering;
 using GameEngine.Utilities;
+using RubyDung.Interfaces;
 using RubyDung.Level;
 using Silk.NET.Maths;
 
@@ -16,6 +15,8 @@ public class Game : Engine
 
     public static bool DebugScreen = true;
 
+    public static GameMode Mode = GameMode.Survival;
+
     // 
     // --------------------------------------------------
 
@@ -25,6 +26,8 @@ public class Game : Engine
 
     private Player _player = null!;
     private Interface _interface = null!;
+
+    private bool _load = false;
 
     // Construtor
     // --------------------------------------------------
@@ -84,9 +87,12 @@ public class Game : Engine
 
         DebugHotkeys.Update();
         
-        if (!DebugHotkeys.Pressed)
+        if (_load)
         {
-            _player.Update();
+            if (!DebugHotkeys.Pressed)
+            {
+                _player.Update();
+            }
         }
 
         _interface.Update();
@@ -117,6 +123,8 @@ public class Game : Engine
         // --------------------------------------------------
 
         _world.Draw(_shader);
+
+        _load = true;
 
         // interface
         // --------------------------------------------------

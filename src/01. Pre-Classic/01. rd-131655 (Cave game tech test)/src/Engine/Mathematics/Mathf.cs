@@ -134,7 +134,7 @@ public struct Mathf
         return System.Math.Min(a, b);
     }
 
-    // Flor
+    // Floor
     // --------------------------------------------------
 
     /// <summary>
@@ -155,5 +155,28 @@ public struct Mathf
     public static int FloorToInt(float f)
     {
         return (int)System.Math.Floor(f);
+    }
+
+    // Ceiling
+    // --------------------------------------------------
+
+    /// <summary>
+    /// Retorna o menor número inteiro maior ou igual a f.
+    /// </summary>
+    /// <param name="f"></param>
+    /// <returns></returns>
+    public static float Ceil(float f)
+    {
+        return (float)System.Math.Ceiling(f);
+    }
+
+    /// <summary>
+    /// Retorna o menor número inteiro maior ou igual a f.
+    /// </summary>
+    /// <param name="f"></param>
+    /// <returns></returns>
+    public static int CeilToInt(float f)
+    {
+        return (int)System.Math.Ceiling(f);
     }
 }

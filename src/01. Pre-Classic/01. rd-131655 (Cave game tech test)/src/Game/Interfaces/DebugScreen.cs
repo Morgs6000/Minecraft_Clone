@@ -6,13 +6,13 @@ using GameEngine.Utilities;
 using RubyDung;
 using RubyDung.Level;
 
-namespace GameEngine.Interfaces;
+namespace RubyDung.Interfaces;
 
 public class DebugScreen
 {
     private Font _font = null!;
     private CpuUsageTracker _cpuTracker = new CpuUsageTracker();
-    private Camera _camera = null!;
+    private Player _player = null!;
 
     private string _version = $"{Game.Version}";
 
@@ -24,8 +24,6 @@ public class DebugScreen
     private string _cameraDir = "";
     private string _chunkPos = "";
 
-    private string _shadedMode = "";
-
     private string _author = $"by Morgana Stradivarius";
 
     private string _memory = "";
@@ -36,8 +34,6 @@ public class DebugScreen
     private string _cpu0 = "";
     private float _maxCpuUsege = 0.0f;
 
-    private string _display = "";
-
     private string _openGLVersion = $"OpenGL {SystemInfo.OpenGLVersion}";
 
     private string _dotnetVersion = $"{RuntimeInformation.FrameworkDescription}";
@@ -47,9 +43,9 @@ public class DebugScreen
         _font = new Font();
     }
 
-    public void SetCamera(Camera camera)
+    public void SetCamera(Player player)
     {
-        _camera = camera;
+        _player = player;
     }
 
     public void Update()
@@ -58,8 +54,15 @@ public class DebugScreen
         CalculateCameraPos();
         CalculateCameraDir();
 
-        _shadedMode = $"Shaded Mode [F3 + W]: {Engine.ShadingMode}";
-        _display = $"Display: {Screen.Width}x{Screen.Height}";
+        string gameMode = $"Game Mode: {Game.Mode}";
+        string speed = $"Movement Speed: {_player.MovementSpeed}";
+        string onFly = $"OnFly: {_player.OnFly}";
+        string onGround = $"OnGround: {_player.OnGround}";
+        string onSprint = $"OnSprint: {_player.OnSprint}";
+
+        string shadedMode = $"Shaded Mode [F3 + W]: {Engine.ShadingMode}";
+
+        string display = $"Display: {Screen.Width}x{Screen.Height}";
 
         float w = Interface.ScreenWidth - 2;
         float h = Interface.ScreenHeight - 8;
@@ -68,16 +71,22 @@ public class DebugScreen
 
         // --- Texto a esquerda ---
 
-        _font.DrawShadow(_version   , 2, h -  2, 16777215);
-        _font.DrawShadow(_fpsString , 2, h - 12, 16777215);
+        _font.DrawShadow(_version   , 2, h -   2, 16777215);
+        _font.DrawShadow(_fpsString , 2, h -  12, 16777215);
 
-        _font.DrawShadow(_cameraPos , 2, h - 32, 16777215);
-        _font.DrawShadow(_chunkPos  , 2, h - 42, 16777215);
-        _font.DrawShadow(_cameraDir , 2, h - 52, 16777215);
+        _font.DrawShadow(_cameraPos , 2, h -  32, 16777215);
+        _font.DrawShadow(_chunkPos  , 2, h -  42, 16777215);
+        _font.DrawShadow(_cameraDir , 2, h -  52, 16777215);
+
+        _font.DrawShadow(gameMode   , 2, h -  72, 16777215);
+        _font.DrawShadow(speed      , 2, h -  82, 16777215);
+        _font.DrawShadow(onFly      , 2, h -  92, 16777215);
+        _font.DrawShadow(onGround   , 2, h - 102, 16777215);
+        _font.DrawShadow(onSprint   , 2, h - 112, 16777215);
         
-        _font.DrawShadow(_shadedMode, 2, h - 72, 16777215);
+        _font.DrawShadow(shadedMode , 2, h - 132, 16777215);
 
-        _font.DrawShadow(_author    , 2,      2, 16777215);
+        _font.DrawShadow(_author    , 2,       2, 16777215);
 
         // --- Texto a direita ---
 
@@ -89,7 +98,7 @@ public class DebugScreen
         _font.DrawShadow(_cpu0, w - MeasureString(_cpu0), h - 52, 16777215);
         _font.DrawShadow(_cpu1, w - MeasureString(_cpu1), h - 62, 16777215);
 
-        _font.DrawShadow(_display, w - MeasureString(_display), h - 82, 16777215);
+        _font.DrawShadow(display, w - MeasureString(display), h - 82, 16777215);
 
         _font.DrawShadow(_openGLVersion, w - MeasureString(_openGLVersion), h - 102, 16777215);
 
@@ -160,19 +169,19 @@ public class DebugScreen
     private void CalculateCameraPos()
     {
         _cameraPos = $"XYZ: " + 
-            $"{_camera.Position.X:F3} / " +
-            $"{_camera.Position.Y:F3} / " +
-            $"{_camera.Position.Z:F3}";
+            $"{_player.Position.X:F3} / " +
+            $"{_player.Position.Y:F3} / " +
+            $"{_player.Position.Z:F3}";
 
         _chunkPos = $"Chunk: " + 
-            $"{Mathf.FloorToInt(_camera.Position.X / World.ChunkSize)} " +
-            $"{Mathf.FloorToInt(_camera.Position.Y / World.ChunkSize)} " +
-            $"{Mathf.FloorToInt(_camera.Position.Z / World.ChunkSize)}";
+            $"{Mathf.FloorToInt(_player.Position.X / World.ChunkSize)} " +
+            $"{Mathf.FloorToInt(_player.Position.Y / World.ChunkSize)} " +
+            $"{Mathf.FloorToInt(_player.Position.Z / World.ChunkSize)}";
     }
 
     private void CalculateCameraDir()
     {
-        float yaw = _camera.Yaw % 360.0f;
+        float yaw = _player.Yaw % 360.0f;
 
         if (yaw < 0)
         {
@@ -223,15 +232,18 @@ public class DebugScreen
     private int MeasureString(string str)
     {
         int width = 0;
+
         for (int i = 0; i < str.Length; i++)
         {
             if (str[i] == '&')
             {
                 i++; // pula o próximo caractere (código de cor)
+                
                 continue;
             }
             width += _font.CharWidths[str[i]];   // torna o campo acessível ou use um método
         }
+
         return width;
     }
 }
