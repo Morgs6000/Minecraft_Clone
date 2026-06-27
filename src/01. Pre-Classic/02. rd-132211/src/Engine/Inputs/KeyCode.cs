@@ -14,6 +14,8 @@ namespace GameEngine.Inputs;
 /// </summary>
 public enum KeyCode
 {
+    #region Keyboard
+
     /// <summary>
     /// Uma tecla desconhecida.
     /// </summary>
@@ -307,22 +309,22 @@ public enum KeyCode
     /// <summary>
     /// A tecla de seta para a direita.
     /// </summary>
-    Right = 262,
+    RightArrow = 262,
 
     /// <summary>
     /// A tecla de seta para a esquerda.
     /// </summary>
-    Left = 263,
+    LeftArrow = 263,
 
     /// <summary>
     /// A tecla de seta para baixo.
     /// </summary>
-    Down = 264,
+    DownArrow = 264,
 
     /// <summary>
     /// A tecla de seta para cima.
     /// </summary>
-    Up = 265,
+    UpArrow = 265,
 
     /// <summary>
     /// A tecla Page Up (avançar página).
@@ -622,5 +624,71 @@ public enum KeyCode
     /// <summary>
     /// A tecla Menu.
     /// </summary>
-    Menu = 348
+    Menu = 348,
+
+    #endregion
+
+    #region Mouse
+
+    /// <summary>
+    /// The left mouse button.
+    /// </summary>
+    MouseLeft = 1000,
+
+    /// <summary>
+    /// The right mouse button.
+    /// </summary>
+    MouseRight = 1001,
+
+    /// <summary>
+    /// The middle mouse button.
+    /// </summary>
+    MouseMiddle = 1002,
+
+    /// <summary>
+    /// The fourth mouse button.
+    /// </summary>
+    Mouse4 = 1003,
+
+    /// <summary>
+    /// The fifth mouse button.
+    /// </summary>
+    Mouse5 = 1004,
+
+    /// <summary>
+    /// The sixth mouse button.
+    /// </summary>
+    Mouse6 = 1005,
+
+    /// <summary>
+    /// The seventh mouse button.
+    /// </summary>
+    Mouse7 = 1006,
+
+    /// <summary>
+    /// The eighth mouse button.
+    /// </summary>
+    Mouse8 = 1007,
+
+    /// <summary>
+    /// The ninth mouse button.
+    /// </summary>
+    Mouse9 = 1008,
+
+    /// <summary>
+    /// The tenth mouse button.
+    /// </summary>
+    Mouse10 = 1009,
+
+    /// <summary>
+    /// The eleventh mouse button.
+    /// </summary>
+    Mouse11 = 1010,
+
+    /// <summary>
+    /// The twelth mouse button.
+    /// </summary>
+    Mouse12 = 1011
+
+    #endregion
 }

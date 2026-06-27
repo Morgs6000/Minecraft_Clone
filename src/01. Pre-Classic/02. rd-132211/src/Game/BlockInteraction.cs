@@ -1,4 +1,5 @@
 using GameEngine.Core;
+using GameEngine.Inputs;
 using GameEngine.Mathematics;
 using GameEngine.Meshing;
 using GameEngine.Rendering;
@@ -56,6 +57,11 @@ public class BlockInteraction
             BlockName = Block.Blocks[blockID].TextualID;
 
             RenderHit(_hitResult);
+
+            if (Input.GetKeyDown(KeyCode.MouseRight))
+            {
+                _world.SetBlock(x, y, z, 0);
+            }
         }
         else
         {

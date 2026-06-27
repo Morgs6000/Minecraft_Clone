@@ -95,11 +95,10 @@ public class Input
 
     private static Vector2 _mouseScrollDelta;
 
-    //
+    // keyboard
     // --------------------------------------------------
 
     private static IKeyboard _keyboard = null!;
-    private static IMouse _mouse = null!;
 
     private static HashSet<KeyCode> _keys = [];
     private static HashSet<KeyCode> _keysPrevious = [];
@@ -110,6 +109,14 @@ public class Input
 
     private readonly static Dictionary<KeyCode, float> _lastPressTime = [];
     private const float _doublePressedTime = 0.3f;
+
+    // mouse
+    // --------------------------------------------------
+
+    private static IMouse _mouse = null!;
+
+    // private static HashSet<KeyCode> _buttons = [];
+    // private static HashSet<KeyCode> _buttonsPrevious = [];
 
     //
     // --------------------------------------------------
@@ -143,16 +150,36 @@ public class Input
 
         _keys.Clear();
 
-        if (_keyboard != null)
+        if (_keyboard == null || _mouse == null)
         {
-            foreach (KeyCode key in _keysValid)
+            return;
+        }
+        
+        foreach (KeyCode key in _keysValid)
+        {
+            // Segurança extra: pula Unknown
+            if (key == KeyCode.Unknown)
             {
+                continue;
+            }
+
+            // Teclas do mouse (valores >= 1000)
+            if (key >= KeyCode.MouseLeft)
+            {
+                if (_mouse.IsButtonPressed((MouseButton)((int)key - 1000)))
+                {
+                    _keys.Add(key);
+                }
+            }
+            else
+            {
+                // Teclas do teclado
                 if (_keyboard.IsKeyPressed((Key)key))
                 {
                     _keys.Add(key);
                 }
             }
-        }
+        }        
     }
 
     //
@@ -165,6 +192,11 @@ public class Input
     /// <returns></returns>
     public static bool GetKey(KeyCode key)
     {
+        // if (key >= KeyCode.MouseLeft)
+        // {
+        //     return _buttons.Contains(key - 1000);
+        // }
+
         return _keys.Contains(key);
     }
 

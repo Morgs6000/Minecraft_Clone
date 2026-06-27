@@ -1,5 +1,6 @@
 using GameEngine.Mathematics;
 using GameEngine.Rendering;
+using GameEngine.Utilities;
 using RubyDung.Blocks;
 
 namespace RubyDung.Level;
@@ -84,13 +85,13 @@ public class World : LevelListener
 
     public void SetChunk(int x0, int y0, int z0, int x1, int y1, int z1)
     {
-        x0 /= 16;
-        y0 /= 16;
-        z0 /= 16;
+        x0 /= ChunkSize;
+        y0 /= ChunkSize;
+        z0 /= ChunkSize;
 
-        x1 /= 16;
-        y1 /= 16;
-        z1 /= 16;
+        x1 /= ChunkSize;
+        y1 /= ChunkSize;
+        z1 /= ChunkSize;
 
         if (x0 < 0)
         {
@@ -136,16 +137,16 @@ public class World : LevelListener
     public void BlockChanged(int x, int y, int z)
     {
         SetChunk(
-            x - 1, y - 1, z - 1,
-            x + 1, y + 1, z + 1
+            x - ChunkSize, y - ChunkSize, z - ChunkSize,
+            x + ChunkSize, y + ChunkSize, z + ChunkSize
         );
     }
 
     public void LightColumnChanged(int x, int y, int z0, int z1)
     {
         SetChunk(
-            x - 1, y - 1, z0 - 1,
-            x + 1, y + 1, z1 + 1
+            x - ChunkSize, y - ChunkSize, z0 - ChunkSize,
+            x + ChunkSize, y + ChunkSize, z1 + ChunkSize
         );
     }
 
@@ -165,24 +166,6 @@ public class World : LevelListener
         int cx = Mathf.FloorToInt((float)x / ChunkSize);
         int cy = Mathf.FloorToInt((float)y / ChunkSize);
         int cz = Mathf.FloorToInt((float)z / ChunkSize);
-
-        /*
-        if (cx < 0 || cx >= _xChunks ||
-            cy < 0 || cy >= _yChunks ||
-            cz < 0 || cz >= _zChunks)
-        {
-            return 0;
-        }
-
-        int index = (cx + cy * _xChunks) * _zChunks + cz;
-        Chunk chunk = _chunks[index];
-
-        int localX = x - (cx * ChunkSize);
-        int localY = y - (cy * ChunkSize);
-        int localZ = z - (cz * ChunkSize);
-
-        return chunk.GetBlock(localX, localY, localZ);
-        */
 
         if (cx >= 0 && cx < _xChunks &&
             cy >= 0 && cy < _yChunks &&
@@ -259,7 +242,7 @@ public class World : LevelListener
                 }
             }
         }
-    } 
+    }
 
     public float GetBrightness(int x, int y, int z)
     {
@@ -273,7 +256,33 @@ public class World : LevelListener
             int i = x + y * Width;
             return z < _lightDepths[i] ? dark : light;
         }
-        
+
         return light;
+    }
+    
+    public void SetBlock(int x, int y, int z, int blockID)
+    {
+        int cx = Mathf.FloorToInt((float)x / ChunkSize);
+        int cy = Mathf.FloorToInt((float)y / ChunkSize);
+        int cz = Mathf.FloorToInt((float)z / ChunkSize);
+
+        if (cx >= 0 && cx < _xChunks &&
+            cy >= 0 && cy < _yChunks &&
+            cz >= 0 && cz < _zChunks)
+        {
+            int index = (cx + cy * _xChunks) * _zChunks + cz;
+            Chunk chunk = _chunks[index];
+
+            int localX = x - (cx * ChunkSize);
+            int localY = y - (cy * ChunkSize);
+            int localZ = z - (cz * ChunkSize);
+
+            chunk.SetBlock(localX, localY, localZ, blockID);
+            
+            // Notifica os listeners para atualizar chunks vizinhos
+            BlockChanged(x, y, z);
+            // Também recalcula a luz na coluna
+            CalcLightDepths(x, y, 1, 1);
+        }
     }
 }

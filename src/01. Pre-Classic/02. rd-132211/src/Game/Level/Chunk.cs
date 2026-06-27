@@ -1,6 +1,7 @@
 using GameEngine.Mathematics;
 using GameEngine.Meshing;
 using GameEngine.Rendering;
+using GameEngine.Utilities;
 using RubyDung.Blocks;
 
 namespace RubyDung.Level;
@@ -153,6 +154,24 @@ public class Chunk
     public float GetBrightness(int x, int y, int z)
     {
         return _world.GetBrightness(x, y, z);
+    }
+
+    public void SetBlock(int x, int y, int z, int type)
+    {
+        if (x >= 0 && x < _size &&
+            y >= 0 && y < _size &&
+            z >= 0 && z < _size)
+        {
+            int i = (y * _size + z) * _size + x;
+            _blocks[i] = (byte)type;
+
+            CalcLightDepths(x, y, 1, 1);
+
+            for (int j = 0; j < _levelListerners.Count; j++)
+            {
+                _levelListerners[j].BlockChanged(x, y, z);
+            }
+        }
     }
 
     // 
