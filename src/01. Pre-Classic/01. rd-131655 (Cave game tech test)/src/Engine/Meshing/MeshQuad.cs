@@ -11,13 +11,12 @@ public class MeshQuad : Mesh
             Clear();
 
             AddQuad(
-                new Vector3[]
-                {
+                [
                     new Vector3(-0.5f,  0.0f, -0.5f),
                     new Vector3( 0.5f,  0.0f, -0.5f),
                     new Vector3( 0.5f,  0.0f,  0.5f),
                     new Vector3(-0.5f,  0.0f,  0.5f)
-                }
+                ]
             );            
 
             return this;
@@ -31,21 +30,19 @@ public class MeshQuad : Mesh
             Clear();
 
             AddQuad(
-                new Vector3[]
-                {
+                [
                     new Vector3(-0.5f,  0.0f, -0.5f),
                     new Vector3( 0.5f,  0.0f, -0.5f),
                     new Vector3( 0.5f,  0.0f,  0.5f),
                     new Vector3(-0.5f,  0.0f,  0.5f)
-                },
+                ],
 
-                new TexCoord[]
-                {
+                [
                     new TexCoord(0.0f, 1.0f),
                     new TexCoord(1.0f, 1.0f),
                     new TexCoord(1.0f, 0.0f),
                     new TexCoord(0.0f, 0.0f)
-                }
+                ]
             );
 
             return this;

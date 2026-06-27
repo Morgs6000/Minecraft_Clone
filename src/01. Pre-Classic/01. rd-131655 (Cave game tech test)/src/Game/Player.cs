@@ -13,6 +13,7 @@ public class Player : Camera
     public bool OnFly { get; private set; } = false;
     public bool OnGround { get; private set; } = false;
     public bool OnSprint { get; private set; } = false;
+    public bool OnSneak { get; private set; } = false;
 
     // 
     // --------------------------------------------------
@@ -24,7 +25,7 @@ public class Player : Camera
 
     private float _walking       = 4.317f;
     private float _sprinting     = 5.612f;
-    // private float _sneaking      = 1.295f;
+    private float _sneaking      = 1.295f;
     private float _flying        = 10.79f;
     private float _sprint_flying = 21.58f;
     private float _falling       = 77.71f;
@@ -105,6 +106,7 @@ public class Player : Camera
 
         ProcessSpace(velocity);
         ProcessSprint();
+        ProcessSneak();
 
         Move(_delta);
     }
@@ -172,6 +174,27 @@ public class Player : Camera
         if (Input.GetKeyUp(KeyCode.W))
         {
             OnSprint = false;
+        }
+    }
+
+    private void ProcessSneak()
+    {
+        if (!OnFly)
+        {
+            MovementSpeed = OnSneak ? _sneaking : OnSprint ? _sprinting : _walking;
+
+            _boundsHeight = OnSneak ? 1.5f : 1.8f;
+        }
+
+        if (!OnFly &&
+            Input.GetKey(KeyCode.ShiftLeft))
+        {
+            OnSneak = true;
+            OnSprint = false;
+        }
+        if (Input.GetKeyUp(KeyCode.ShiftLeft))
+        {
+            OnSneak = false;
         }
     }
 

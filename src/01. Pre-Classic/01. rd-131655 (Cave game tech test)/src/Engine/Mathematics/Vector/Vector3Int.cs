@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace GameEngine.Mathematics;
 
 /// <summary>
@@ -222,5 +224,66 @@ public struct Vector3Int
             a - b.Y,
             a - b.Z
         );
+    }
+
+    // Igualdade
+    // --------------------------------------------------
+
+    public static bool operator ==(Vector3Int a, Vector3Int b)
+    {
+        return a.X == b.X &&
+               a.Y == b.Y &&
+               a.Z == b.Z;
+    }
+
+    public static bool operator ==(Vector3Int a, int b)
+    {
+        return a.X == b &&
+               a.Y == b &&
+               a.Z == b;
+    }
+
+    public static bool operator ==(int a, Vector3Int b)
+    {
+        return a == b.X &&
+               a == b.Y &&
+               a == b.Z;
+    }
+
+    // Desigualdade
+    // --------------------------------------------------
+
+    public static bool operator !=(Vector3Int a, Vector3Int b)
+    {
+        return a.X != b.X &&
+               a.Y != b.Y &&
+               a.Z != b.Z;
+    }
+
+    public static bool operator !=(Vector3Int a, int b)
+    {
+        return a.X != b &&
+               a.Y != b &&
+               a.Z != b;
+    }
+
+    public static bool operator !=(int a, Vector3Int b)
+    {
+        return a != b.X &&
+               a != b.Y &&
+               a != b.Z;
+    }
+
+    // 
+    // --------------------------------------------------
+
+    public override bool Equals([NotNullWhen(true)] object? obj)
+    {
+        return base.Equals(obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
     }
 }

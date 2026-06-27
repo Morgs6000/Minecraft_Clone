@@ -54,6 +54,13 @@ public static class SystemInfo
         return hasSuffix ? $"{size:F0} {sizes[order]}" : $"{size:F0}";
     }
 
+    public static string FormatToMB(long bytes, bool hasSuffix = true)
+    {
+        double size = bytes / (1024.0 * 1024.0);
+        
+        return hasSuffix ? $"{size:F0} MB" : $"{size:F0}";
+    }
+
     /// <summary>
     /// Nome do processador (ex: "Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz").
     /// Tenta obter de forma multiplataforma.

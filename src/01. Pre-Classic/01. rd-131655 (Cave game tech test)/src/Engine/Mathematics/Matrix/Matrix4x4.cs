@@ -31,7 +31,7 @@ public struct Matrix4x4
         M41 = m41; M42 = m42; M43 = m43; M44 = m44;
     }
 
-    // 
+    // Rotate
     // --------------------------------------------------
 
     public static Matrix4x4 Rotate(Vector3 axis, float angle)
@@ -41,15 +41,56 @@ public struct Matrix4x4
         return System.Numerics.Matrix4x4.CreateFromAxisAngle(axis, angle);
     }
 
+    // Translate
+    // --------------------------------------------------
+
     public static Matrix4x4 Translate(Vector3 position)
     {
         return System.Numerics.Matrix4x4.CreateTranslation(position);
     }
-    
+
     public static Matrix4x4 Translate(float x, float y, float z)
     {
         return System.Numerics.Matrix4x4.CreateTranslation(x, y, z);
     }
+
+    // Scale
+    // --------------------------------------------------
+    
+    /// <summary>
+    /// Cria uma matriz de escala.
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="z"></param>
+    /// <returns></returns>
+    public static Matrix4x4 Scale(float x, float y, float z)
+    {
+        return System.Numerics.Matrix4x4.CreateScale(x, y, z);
+    }
+
+    /// <summary>
+    /// Cria uma matriz de escala.
+    /// </summary>
+    /// <param name="scale"></param>
+    /// <returns></returns>
+    public static Matrix4x4 Scale(Vector3 scale)
+    {
+        return System.Numerics.Matrix4x4.CreateScale(scale);
+    }
+
+    /// <summary>
+    /// Cria uma matriz de escala.
+    /// </summary>
+    /// <param name="scale"></param>
+    /// <returns></returns>
+    public static Matrix4x4 Scale(float scale)
+    {
+        return System.Numerics.Matrix4x4.CreateScale(scale);
+    }
+
+    // Orthographic
+    // --------------------------------------------------
 
     /// <summary>
     /// Cria uma matriz de projeção ortogonal.
@@ -66,6 +107,9 @@ public struct Matrix4x4
         return System.Numerics.Matrix4x4.CreateOrthographicOffCenter(left, right, bottom, top, zNear, zFar);
     }
 
+    // Perspective
+    // --------------------------------------------------
+
     /// <summary>
     /// Cria uma matriz de projeção em perspectiva.
     /// </summary>
@@ -78,6 +122,9 @@ public struct Matrix4x4
     {
         return System.Numerics.Matrix4x4.CreatePerspectiveFieldOfView(fov, aspect, zNear, zFar);
     }
+
+    // LookAt
+    // --------------------------------------------------
     
     public static Matrix4x4 LookAt(Vector3 position, Vector3 target, Vector3 up)
     {

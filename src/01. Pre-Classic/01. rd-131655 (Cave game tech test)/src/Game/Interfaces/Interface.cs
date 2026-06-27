@@ -1,4 +1,5 @@
 using GameEngine.Core;
+using GameEngine.Interfaces;
 using GameEngine.Mathematics;
 using GameEngine.Rendering;
 using GameEngine.Utilities;
@@ -39,7 +40,7 @@ public class Interface
         // shader
         // --------------------------------------------------
 
-        _shader = new ShaderProgram("interface");
+        _shader = new("interface");
 
         // game mode switcher
         // --------------------------------------------------
@@ -74,7 +75,10 @@ public class Interface
         // game mode switcher
         // --------------------------------------------------
 
-        _gameModeSwitcher.Update();
+        if (DebugHotkeys.ShowGameModeSwitcher)
+        {
+            _gameModeSwitcher.Update();
+        }
 
         // debug screen
         // --------------------------------------------------
@@ -105,7 +109,6 @@ public class Interface
         _gl.Disable(EnableCap.DepthTest);
 
         {
-
             // game mode switcher
             // --------------------------------------------------
 
@@ -118,7 +121,6 @@ public class Interface
             // --------------------------------------------------
 
             _debugScreen.Draw(_shader);
-
         }
 
         _gl.Enable(EnableCap.DepthTest);

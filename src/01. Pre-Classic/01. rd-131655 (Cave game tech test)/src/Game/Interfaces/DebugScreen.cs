@@ -3,7 +3,6 @@ using GameEngine.Core;
 using GameEngine.Mathematics;
 using GameEngine.Rendering;
 using GameEngine.Utilities;
-using RubyDung;
 using RubyDung.Level;
 
 namespace RubyDung.Interfaces;
@@ -20,8 +19,9 @@ public class DebugScreen
     private float _timeAccumulator = 0.0f;
     private string _fpsString = "";
 
-    private string _cameraPos = "";
+    private string _playerPos = "";
     private string _cameraDir = "";
+    private string _blockPos = "";
     private string _chunkPos = "";
 
     private string _author = $"by Morgana Stradivarius";
@@ -51,7 +51,7 @@ public class DebugScreen
     public void Update()
     {
         CalculateFPSs();
-        CalculateCameraPos();
+        CalculatePlayerPos();
         CalculateCameraDir();
 
         string gameMode = $"Game Mode: {Game.Mode}";
@@ -59,6 +59,7 @@ public class DebugScreen
         string onFly = $"OnFly: {_player.OnFly}";
         string onGround = $"OnGround: {_player.OnGround}";
         string onSprint = $"OnSprint: {_player.OnSprint}";
+        string onSneak = $"OnSneak: {_player.OnSneak}";
 
         string shadedMode = $"Shaded Mode [F3 + W]: {Engine.ShadingMode}";
 
@@ -67,24 +68,26 @@ public class DebugScreen
         float w = Interface.ScreenWidth - 2;
         float h = Interface.ScreenHeight - 8;
 
-        _font.Mesh.Clear();
+        _font.Clear();
 
         // --- Texto a esquerda ---
 
         _font.DrawShadow(_version   , 2, h -   2, 16777215);
         _font.DrawShadow(_fpsString , 2, h -  12, 16777215);
 
-        _font.DrawShadow(_cameraPos , 2, h -  32, 16777215);
-        _font.DrawShadow(_chunkPos  , 2, h -  42, 16777215);
-        _font.DrawShadow(_cameraDir , 2, h -  52, 16777215);
+        _font.DrawShadow(_playerPos , 2, h -  32, 16777215);
+        _font.DrawShadow(_blockPos  , 2, h -  42, 16777215);
+        _font.DrawShadow(_chunkPos  , 2, h -  52, 16777215);
+        _font.DrawShadow(_cameraDir , 2, h -  62, 16777215);
 
-        _font.DrawShadow(gameMode   , 2, h -  72, 16777215);
-        _font.DrawShadow(speed      , 2, h -  82, 16777215);
-        _font.DrawShadow(onFly      , 2, h -  92, 16777215);
-        _font.DrawShadow(onGround   , 2, h - 102, 16777215);
-        _font.DrawShadow(onSprint   , 2, h - 112, 16777215);
+        _font.DrawShadow(gameMode   , 2, h -  82, 16777215);
+        _font.DrawShadow(speed      , 2, h -  92, 16777215);
+        _font.DrawShadow(onFly      , 2, h - 102, 16777215);
+        _font.DrawShadow(onGround   , 2, h - 112, 16777215);
+        _font.DrawShadow(onSprint   , 2, h - 122, 16777215);
+        _font.DrawShadow(onSneak    , 2, h - 132, 16777215);
         
-        _font.DrawShadow(shadedMode , 2, h - 132, 16777215);
+        _font.DrawShadow(shadedMode , 2, h - 152, 16777215);
 
         _font.DrawShadow(_author    , 2,       2, 16777215);
 
@@ -102,7 +105,7 @@ public class DebugScreen
 
         _font.DrawShadow(_openGLVersion, w - MeasureString(_openGLVersion), h - 102, 16777215);
 
-        _font.MeshRenderer.Mesh = _font.Mesh;
+        _font.FontRenderer();
     }
 
     public void Draw(ShaderProgram shader)
@@ -141,19 +144,15 @@ public class DebugScreen
 
         string percent = (total > 0) ? $"{((float)used / total * 100.0f):F0}%" : "N/A";
 
-        // Trocar de :
-        //      Memory: 0 B / 0 B
-        // para:
-        //      Memory: 0 / 0 B
         _memory =
             $"Memory: {percent} " +
-            $"{SystemInfo.FormatBytes(used, false)} / " +
-            $"{SystemInfo.FormatBytes(total)}";
+            $"{SystemInfo.FormatToMB(used, false)} / " +
+            $"{SystemInfo.FormatToMB(total, false)} MB";
 
         string maxPercent = (total > 0) ? $"{((float)_maxMemoryUsed / total * 100.0f):F0}%" : "N/A";
         
         _memoryMax =
-            $"(MaxUsed: {maxPercent} {SystemInfo.FormatBytes(_maxMemoryUsed)})";
+            $"(MaxUsed: {maxPercent} {SystemInfo.FormatToMB(_maxMemoryUsed)})";
     }
 
     private void CalculateCPU()
@@ -168,12 +167,17 @@ public class DebugScreen
             $" (MaxUsed: {_maxCpuUsege:F0}%)";
     }
 
-    private void CalculateCameraPos()
+    private void CalculatePlayerPos()
     {
-        _cameraPos = $"XYZ: " + 
+        _playerPos = $"XYZ: " + 
             $"{_player.Position.X:F3} / " +
             $"{_player.Position.Y:F3} / " +
             $"{_player.Position.Z:F3}";
+
+        _blockPos = $"Block: " + 
+            $"{Mathf.FloorToInt(_player.Position.X)} " +
+            $"{Mathf.FloorToInt(_player.Position.Y)} " +
+            $"{Mathf.FloorToInt(_player.Position.Z)}";
 
         _chunkPos = $"Chunk: " + 
             $"{Mathf.FloorToInt(_player.Position.X / World.ChunkSize)} " +
@@ -194,38 +198,38 @@ public class DebugScreen
 
         if (yaw > 22.5f && yaw < 67.5f)
         {
-            dir = "Northeast (Positive X / Positive Y) ";
+            dir = "Northeast (+X / +Y) ";
         }
         // if (yaw > 45.0f && yaw < 135.0f)
         else if (yaw > 67.5f && yaw < 112.5f)
         {
-            dir = "North (Positive Y) ";
+            dir = "North (+Y) ";
         }
         else if (yaw > 112.5f && yaw < 157.5f)
         {
-            dir = "Northwest (Negative X / Positive Y) ";
+            dir = "Northwest (-X / +Y) ";
         }
         // else if (yaw > 135.0f && yaw < 225.0f)
         else if (yaw > 157.5f && yaw < 202.5f)
         {
-            dir = "West (Negative X) ";
+            dir = "West (-X) ";
         }
         else if (yaw > 202.5f && yaw < 247.5f)
         {
-            dir = "Southwest (Negative X / Negative Y) ";
+            dir = "Southwest (-X / -Y) ";
         }
         // else if (yaw > 225.0f && yaw < 315.0f)
         else if (yaw > 247.5f && yaw < 292.5f)
         {
-            dir = "South (Negative Y) ";
+            dir = "South (-Y) ";
         }
         else if (yaw > 292.5f && yaw < 337.5f)
         {
-            dir = "Southeast (Positive X / Negative Y) ";
+            dir = "Southeast (+X / -Y) ";
         }
         else
         {
-            dir = "East (Positive X) ";
+            dir = "East (+X) ";
         }
 
         _cameraDir = $"Facing: {dir} {yaw:F0}";

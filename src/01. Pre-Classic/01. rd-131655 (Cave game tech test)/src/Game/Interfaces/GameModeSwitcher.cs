@@ -1,3 +1,4 @@
+using GameEngine.Interfaces;
 using GameEngine.Mathematics;
 using GameEngine.Meshing;
 using GameEngine.Rendering;
@@ -7,162 +8,163 @@ namespace RubyDung.Interfaces;
 
 public class GameModeSwitcher
 {
-    private Texture2D[] _texture = new Texture2D[2];
-    private MeshRenderer[] _meshRenderer = new MeshRenderer[3];
     private Font _font = null!;
 
-    private Vector3[] positions = [
-        new Vector3(211.0f, 192.0f, 0.0f),
-        new Vector3(241.0f, 192.0f, 0.0f),
-        new Vector3(271.0f, 192.0f, 0.0f),
-        new Vector3(301.0f, 192.0f, 0.0f)
-    ];
+    private Image _backSprite = null!;
+    private Image _highlight = null!;
+
+    private Image[] _slot = new Image[4];
+    private Image[] _icon = new Image[4];
 
     public GameModeSwitcher()
     {
-        // texture
+        // _backSprite
         // --------------------------------------------------
 
-        _texture[0] = new Texture2D("gamemode_switcher");
-        _texture[1] = new Texture2D("items");
+        _backSprite = new Image();
 
-        // mesh
+        _backSprite.Width = 125.0f;
+        _backSprite.Height = 75.0f;
+
+        _backSprite.Texture = new Texture2D("gamemode_switcher");
+        _backSprite.UVRect = new Vector4(0.0f, 0.0f, 125.0f, 75.0f);
+
+        _backSprite.Load();
+
+        // _slot[0]
         // --------------------------------------------------
 
-        float w = Interface.ScreenWidth / 2;
-        float h = Interface.ScreenHeight / 2;
+        _slot[0] = new Image();
 
-        MeshQuad[] mesh = new MeshQuad[3];
+        _slot[0].Position = new Vector3(-45.0f, 0.0f, 0.0f);
 
-        mesh[0] = new MeshQuad();
-        mesh[0].Clear();
+        _slot[0].Width = 25.0f;
+        _slot[0].Height = 25.0f;
 
-        // _textures[0].Bind();
+        _slot[0].Texture = new Texture2D("gamemode_switcher");
+        _slot[0].UVRect = new Vector4(0.0f, 75.0f, 25.0f, 25.0f);
 
-        float largura_0 = 125.0f;
-        float altura_0 = 75.0f;
+        _slot[0].Load();
 
-        float x0_0 = w - (largura_0 / 2.0f);
-        float y0_0 = h - (altura_0 / 2.0f);
+        // _slot[1]
+        // --------------------------------------------------
 
-        float x1_0 = w + (largura_0 / 2.0f);
-        float y1_0 = h + (altura_0 / 2.0f);
+        _slot[1] = new Image();
 
-        float u0_0 = 0.0f;
-        float v0_0 = 0.0f;
+        _slot[1].Position = new Vector3(-15.0f, 0.0f, 0.0f);
 
-        float u1_0 = u0_0 + (largura_0 / 128.0f);
-        float v1_0 = v0_0 + (altura_0 / 128.0f);
+        _slot[1].Width = 25.0f;
+        _slot[1].Height = 25.0f;
 
-        mesh[0].AddVertexWithUV(x0_0, y0_0, 0.0f, u0_0, v1_0);
-        mesh[0].AddVertexWithUV(x1_0, y0_0, 0.0f, u1_0, v1_0);
-        mesh[0].AddVertexWithUV(x1_0, y1_0, 0.0f, u1_0, v0_0);
-        mesh[0].AddVertexWithUV(x0_0, y1_0, 0.0f, u0_0, v0_0);
+        _slot[1].Texture = new Texture2D("gamemode_switcher");
+        _slot[1].UVRect = new Vector4(0.0f, 75.0f, 25.0f, 25.0f);
 
-        float largura_1 = 25.0f;
-        float altura_1 = 25.0f;
+        _slot[1].Load();
 
-        float x0_1 = w - (largura_1 / 2.0f);
-        float y0_1 = h - (altura_1 / 2.0f);
+        // _slot[2]
+        // --------------------------------------------------
 
-        float x1_1 = w + (largura_1 / 2.0f);
-        float y1_1 = h + (altura_1 / 2.0f);
+        _slot[2] = new Image();
 
-        float u0_1 = 0.0f;
-        float v0_1 = altura_0 / 128.0f;
+        _slot[2].Position = new Vector3(15.0f, 0.0f, 0.0f);
 
-        float u1_1 = u0_1 + (largura_1 / 128.0f);
-        float v1_1 = v0_1 + (altura_1 / 128.0f);
+        _slot[2].Width = 25.0f;
+        _slot[2].Height = 25.0f;
 
-        mesh[0].AddVertexWithUV(x0_1 - (largura_0 / 2) + 17.5f, y0_1, 0.0f, u0_1, v1_1);
-        mesh[0].AddVertexWithUV(x1_1 - (largura_0 / 2) + 17.5f, y0_1, 0.0f, u1_1, v1_1);
-        mesh[0].AddVertexWithUV(x1_1 - (largura_0 / 2) + 17.5f, y1_1, 0.0f, u1_1, v0_1);
-        mesh[0].AddVertexWithUV(x0_1 - (largura_0 / 2) + 17.5f, y1_1, 0.0f, u0_1, v0_1);
+        _slot[2].Texture = new Texture2D("gamemode_switcher");
+        _slot[2].UVRect = new Vector4(0.0f, 75.0f, 25.0f, 25.0f);
 
-        mesh[0].AddVertexWithUV(x0_1 - (largura_0 / 2) + 47.5f, y0_1, 0.0f, u0_1, v1_1);
-        mesh[0].AddVertexWithUV(x1_1 - (largura_0 / 2) + 47.5f, y0_1, 0.0f, u1_1, v1_1);
-        mesh[0].AddVertexWithUV(x1_1 - (largura_0 / 2) + 47.5f, y1_1, 0.0f, u1_1, v0_1);
-        mesh[0].AddVertexWithUV(x0_1 - (largura_0 / 2) + 47.5f, y1_1, 0.0f, u0_1, v0_1);
+        _slot[2].Load();
 
-        mesh[0].AddVertexWithUV(x0_1 + (largura_0 / 2) - 47.5f, y0_1, 0.0f, u0_1, v1_1);
-        mesh[0].AddVertexWithUV(x1_1 + (largura_0 / 2) - 47.5f, y0_1, 0.0f, u1_1, v1_1);
-        mesh[0].AddVertexWithUV(x1_1 + (largura_0 / 2) - 47.5f, y1_1, 0.0f, u1_1, v0_1);
-        mesh[0].AddVertexWithUV(x0_1 + (largura_0 / 2) - 47.5f, y1_1, 0.0f, u0_1, v0_1);
+        // _slot[3]
+        // --------------------------------------------------
 
-        mesh[0].AddVertexWithUV(x0_1 + (largura_0 / 2) - 17.5f, y0_1, 0.0f, u0_1, v1_1);
-        mesh[0].AddVertexWithUV(x1_1 + (largura_0 / 2) - 17.5f, y0_1, 0.0f, u1_1, v1_1);
-        mesh[0].AddVertexWithUV(x1_1 + (largura_0 / 2) - 17.5f, y1_1, 0.0f, u1_1, v0_1);
-        mesh[0].AddVertexWithUV(x0_1 + (largura_0 / 2) - 17.5f, y1_1, 0.0f, u0_1, v0_1);
+        _slot[3] = new Image();
 
-        // Debug.Log(x0_1 + (largura_0 / 2) - 17.5f + (25.0f / 2.0f));
+        _slot[3].Position = new Vector3(45.0f, 0.0f, 0.0f);
 
-        _meshRenderer[0] = new MeshRenderer();
-        _meshRenderer[0].Mesh = mesh[0];
+        _slot[3].Width = 25.0f;
+        _slot[3].Height = 25.0f;
 
-        // _textures[1].Bind();
+        _slot[3].Texture = new Texture2D("gamemode_switcher");
+        _slot[3].UVRect = new Vector4(0.0f, 75.0f, 25.0f, 25.0f);
 
-        mesh[1] = new MeshQuad();
-        mesh[1].Clear();
+        _slot[3].Load();
 
-        float x0_2 = w - (16.0f / 2.0f);
-        float y0_2 = h - (16.0f / 2.0f);
+        // _icon[0]
+        // --------------------------------------------------
 
-        float x1_2 = w + (16.0f / 2.0f);
-        float y1_2 = h + (16.0f / 2.0f);
+        _icon[0] = new Image();
 
-        float u0_2 = 0.0f % 16.0f;
-        float v0_2 = 0.0f / 16.0f;
+        _icon[0].Position = _slot[0].Position;
 
-        float u1_2 = u0_2 + (1.0f / 16.0f);
-        float v1_2 = v0_2 + (1.0f / 16.0f);
+        _icon[0].Width = 16.0f;
+        _icon[0].Height = 16.0f;
 
-        mesh[1].AddVertexWithUV(x0_2 - (largura_0 / 2) + 17.5f, y0_2, 0.0f, u0_2, v1_2);
-        mesh[1].AddVertexWithUV(x1_2 - (largura_0 / 2) + 17.5f, y0_2, 0.0f, u1_2, v1_2);
-        mesh[1].AddVertexWithUV(x1_2 - (largura_0 / 2) + 17.5f, y1_2, 0.0f, u1_2, v0_2);
-        mesh[1].AddVertexWithUV(x0_2 - (largura_0 / 2) + 17.5f, y1_2, 0.0f, u0_2, v0_2);
+        _icon[0].Texture = new Texture2D("items");
+        _icon[0].UVRect = new Vector4(0.0f, 0.0f, 16.0f, 16.0f);
 
-        mesh[1].AddVertexWithUV(x0_2 - (largura_0 / 2) + 47.5f, y0_2, 0.0f, u0_2, v1_2);
-        mesh[1].AddVertexWithUV(x1_2 - (largura_0 / 2) + 47.5f, y0_2, 0.0f, u1_2, v1_2);
-        mesh[1].AddVertexWithUV(x1_2 - (largura_0 / 2) + 47.5f, y1_2, 0.0f, u1_2, v0_2);
-        mesh[1].AddVertexWithUV(x0_2 - (largura_0 / 2) + 47.5f, y1_2, 0.0f, u0_2, v0_2);
+        _icon[0].Load();
 
-        mesh[1].AddVertexWithUV(x0_2 + (largura_0 / 2) - 47.5f, y0_2, 0.0f, u0_2, v1_2);
-        mesh[1].AddVertexWithUV(x1_2 + (largura_0 / 2) - 47.5f, y0_2, 0.0f, u1_2, v1_2);
-        mesh[1].AddVertexWithUV(x1_2 + (largura_0 / 2) - 47.5f, y1_2, 0.0f, u1_2, v0_2);
-        mesh[1].AddVertexWithUV(x0_2 + (largura_0 / 2) - 47.5f, y1_2, 0.0f, u0_2, v0_2);
+        // _icon[2]
+        // --------------------------------------------------
 
-        mesh[1].AddVertexWithUV(x0_2 + (largura_0 / 2) - 17.5f, y0_2, 0.0f, u0_2, v1_2);
-        mesh[1].AddVertexWithUV(x1_2 + (largura_0 / 2) - 17.5f, y0_2, 0.0f, u1_2, v1_2);
-        mesh[1].AddVertexWithUV(x1_2 + (largura_0 / 2) - 17.5f, y1_2, 0.0f, u1_2, v0_2);
-        mesh[1].AddVertexWithUV(x0_2 + (largura_0 / 2) - 17.5f, y1_2, 0.0f, u0_2, v0_2);
+        _icon[1] = new Image();
 
-        _meshRenderer[1] = new MeshRenderer();
-        _meshRenderer[1].Mesh = mesh[1];
+        _icon[1].Position = _slot[1].Position;
 
-        // _textures[0].Bind();
+        _icon[1].Width = 16.0f;
+        _icon[1].Height = 16.0f;
 
-        mesh[2] = new MeshQuad();
-        mesh[2].Clear();
+        _icon[1].Texture = new Texture2D("items");
+        _icon[1].UVRect = new Vector4(32.0f, 64.0f, 16.0f, 16.0f);
 
-        float x0_3 = -largura_1 / 2.0f;
-        float y0_3 = -altura_1 / 2.0f;
+        _icon[1].Load();
 
-        float x1_3 = largura_1 / 2.0f;
-        float y1_3 = altura_1 / 2.0f;
+        // _icon[2]
+        // --------------------------------------------------
 
-        float u0_3 = largura_1 / 128.0f;
-        float v0_3 = altura_0 / 128.0f;
+        _icon[2] = new Image();
 
-        float u1_3 = u0_3 + (largura_1 / 128.0f);
-        float v1_3 = v0_3 + (altura_1 / 128.0f);
+        _icon[2].Position = _slot[2].Position;
 
-        mesh[2].AddVertexWithUV(x0_3, y0_3, 0.0f, u0_3, v1_3);
-        mesh[2].AddVertexWithUV(x1_3, y0_3, 0.0f, u1_3, v1_3);
-        mesh[2].AddVertexWithUV(x1_3, y1_3, 0.0f, u1_3, v0_3);
-        mesh[2].AddVertexWithUV(x0_3, y1_3, 0.0f, u0_3, v0_3);
+        _icon[2].Width = 16.0f;
+        _icon[2].Height = 16.0f;
 
-        _meshRenderer[2] = new MeshRenderer();
-        _meshRenderer[2].Mesh = mesh[2];
+        _icon[2].Texture = new Texture2D("items");
+        _icon[2].UVRect = new Vector4(208.0f, 192.0f, 16.0f, 16.0f);
+
+        _icon[2].Load();
+
+        // _icon[3]
+        // --------------------------------------------------
+
+        _icon[3] = new Image();
+
+        _icon[3].Position = _slot[3].Position;
+
+        _icon[3].Width = 16.0f;
+        _icon[3].Height = 16.0f;
+
+        _icon[3].Texture = new Texture2D("items");
+        _icon[3].UVRect = new Vector4(176.0f, 144.0f, 16.0f, 16.0f);
+
+        _icon[3].Load();
+
+        // _highlight
+        // --------------------------------------------------
+
+        _highlight = new Image();
+
+        _highlight.Position = _slot[0].Position;
+
+        _highlight.Width = 25.0f;
+        _highlight.Height = 25.0f;
+
+        _highlight.Texture = new Texture2D("gamemode_switcher");
+        _highlight.UVRect = new Vector4(25.0f, 75.0f, 25.0f, 25.0f);
+
+        _highlight.Load();
 
         // font
         // --------------------------------------------------
@@ -172,6 +174,28 @@ public class GameModeSwitcher
 
     public void Update()
     {
+        // _highlight
+        // --------------------------------------------------
+
+        switch (Game.Mode)
+        {
+            case GameMode.Creative:
+                _highlight.Position = _slot[0].Position;
+                break;
+            case GameMode.Survival:
+                _highlight.Position = _slot[1].Position;
+                break;
+            case GameMode.Adventure:
+                _highlight.Position = _slot[2].Position;
+                break;
+            case GameMode.Spectator:
+                _highlight.Position = _slot[3].Position;
+                break;
+        }
+
+        // font
+        // --------------------------------------------------
+
         float w = Interface.ScreenWidth / 2;
         float h = Interface.ScreenHeight / 2;
 
@@ -184,7 +208,7 @@ public class GameModeSwitcher
 
         // Debug.Log(Color.FromHex("#54FCFC").ToDecimalString());
 
-        _font.Mesh.Clear();
+        _font.Clear();
 
         _font.DrawShadow(
             str0,
@@ -207,7 +231,7 @@ public class GameModeSwitcher
             16777215
         );
 
-        _font.MeshRenderer.Mesh = _font.Mesh;
+        _font.FontRenderer();
     }
 
     public void Draw(ShaderProgram shader)
@@ -215,26 +239,24 @@ public class GameModeSwitcher
         // mesh
         // --------------------------------------------------
 
-        Matrix4x4 model = Matrix4x4.Identity;
-        shader.SetUniform("model", model);
+        _backSprite.Draw(shader);
 
-        _texture[0].Bind();
-        _meshRenderer[0].Draw(shader);
+        _slot[0].Draw(shader);
+        _slot[1].Draw(shader);
+        _slot[2].Draw(shader);
+        _slot[3].Draw(shader);
 
-        _texture[1].Bind();
-        _meshRenderer[1].Draw(shader);
+        _icon[0].Draw(shader);
+        _icon[1].Draw(shader);
+        _icon[2].Draw(shader);
+        _icon[3].Draw(shader);
 
-        model = Matrix4x4.Identity;
-        model *= Matrix4x4.Translate(positions[0]);
-        shader.SetUniform("model", model);
-
-        _texture[0].Bind();
-        _meshRenderer[2].Draw(shader);
+        _highlight.Draw(shader);
 
         // font
         // --------------------------------------------------
 
-        model = Matrix4x4.Identity;
+        Matrix4x4 model = Matrix4x4.Identity;
         shader.SetUniform("model", model);
 
         _font.Texture.Bind();

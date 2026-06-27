@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace GameEngine.Mathematics;
 
 /// <summary>
@@ -262,5 +264,72 @@ public struct Vector4Int
             a - b.Z,
             a - b.W
         );
+    }
+
+    // Igualdade
+    // --------------------------------------------------
+
+    public static bool operator ==(Vector4Int a, Vector4Int b)
+    {
+        return a.X == b.X &&
+               a.Y == b.Y &&
+               a.Z == b.Z &&
+               a.W == b.W;
+    }
+
+    public static bool operator ==(Vector4Int a, int b)
+    {
+        return a.X == b &&
+               a.Y == b &&
+               a.Z == b &&
+               a.W == b;
+    }
+
+    public static bool operator ==(int a, Vector4Int b)
+    {
+        return a == b.X &&
+               a == b.Y &&
+               a == b.Z &&
+               a == b.W;
+    }
+
+    // Desigualdade
+    // --------------------------------------------------
+
+    public static bool operator !=(Vector4Int a, Vector4Int b)
+    {
+        return a.X != b.X &&
+               a.Y != b.Y &&
+               a.Z != b.Z &&
+               a.W != b.W;
+    }
+
+    public static bool operator !=(Vector4Int a, int b)
+    {
+        return a.X != b &&
+               a.Y != b &&
+               a.Z != b &&
+               a.W != b;
+    }
+
+    public static bool operator !=(int a, Vector4Int b)
+    {
+        return a != b.X &&
+               a != b.Y &&
+               a != b.Z &&
+               a != b.W;
+    }
+
+    // 
+    // --------------------------------------------------
+
+    public override bool Equals([NotNullWhen(true)] object? obj)
+    {
+        return base.Equals(obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
     }
 }

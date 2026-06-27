@@ -35,8 +35,8 @@ public class Block
         float z1 = (float)z + 1.0f;
 
         float c1 = 0.6f;
-        float c2 = 1.0f;
-        float c3 = 0.8f;
+        float c2 = 0.8f;
+        float c3 = 1.0f;
 
         float u0 = (float)_tex / 16.0f;
         float v0 = 0.0f;
@@ -58,13 +58,12 @@ public class Block
             mesh.SetColors(br, br, br);
 
             mesh.AddQuad(
-                new Vector3[]
-                {
+                [
                     new Vector3(x0, y1, z0),
                     new Vector3(x0, y0, z0),
                     new Vector3(x0, y0, z1),
                     new Vector3(x0, y1, z1)
-                },
+                ],
 
                 texCoords
             );
@@ -76,13 +75,12 @@ public class Block
             mesh.SetColors(br, br, br);
 
             mesh.AddQuad(
-                new Vector3[]
-                {
+                [
                     new Vector3(x1, y0, z0),
                     new Vector3(x1, y1, z0),
                     new Vector3(x1, y1, z1),
                     new Vector3(x1, y0, z1)
-                },
+                ],
 
                 texCoords
             );
@@ -94,13 +92,12 @@ public class Block
             mesh.SetColors(br, br, br);
 
             mesh.AddQuad(
-                new Vector3[]
-                {
+                [
                     new Vector3(x0, y0, z0),
                     new Vector3(x1, y0, z0),
                     new Vector3(x1, y0, z1),
                     new Vector3(x0, y0, z1)
-                },
+                ],
 
                 texCoords
             );
@@ -112,13 +109,12 @@ public class Block
             mesh.SetColors(br, br, br);
 
             mesh.AddQuad(
-                new Vector3[]
-                {
+                [                
                     new Vector3(x1, y1, z0),
                     new Vector3(x0, y1, z0),
                     new Vector3(x0, y1, z1),
                     new Vector3(x1, y1, z1)
-                },
+                ],
 
                 texCoords
             );
@@ -130,13 +126,12 @@ public class Block
             mesh.SetColors(br, br, br);
 
             mesh.AddQuad(
-                new Vector3[]
-                {
+                [
                     new Vector3(x0, y1, z0),
                     new Vector3(x1, y1, z0),
                     new Vector3(x1, y0, z0),
                     new Vector3(x0, y0, z0)
-                },
+                ],
 
                 texCoords
             );
@@ -148,13 +143,12 @@ public class Block
             mesh.SetColors(br, br, br);
 
             mesh.AddQuad(
-                new Vector3[]
-                {
+                [
                     new Vector3(x0, y0, z1),
                     new Vector3(x1, y0, z1),
                     new Vector3(x1, y1, z1),
                     new Vector3(x0, y1, z1)
-                },
+                ],
 
                 texCoords
             );

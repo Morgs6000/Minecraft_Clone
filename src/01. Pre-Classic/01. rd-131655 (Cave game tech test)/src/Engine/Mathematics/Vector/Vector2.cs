@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace GameEngine.Mathematics;
 
 /// <summary>
@@ -198,5 +200,60 @@ public struct Vector2
             a - b.X,
             a - b.Y
         );
+    }
+
+    // Igualdade
+    // --------------------------------------------------
+
+    public static bool operator ==(Vector2 a, Vector2 b)
+    {
+        return a.X == b.X &&
+               a.Y == b.Y;
+    }
+
+    public static bool operator ==(Vector2 a, float b)
+    {
+        return a.X == b &&
+               a.Y == b;
+    }
+
+    public static bool operator ==(float a, Vector2 b)
+    {
+        return a == b.X &&
+               a == b.Y;
+    }
+
+    // Desigualdade
+    // --------------------------------------------------
+
+    public static bool operator !=(Vector2 a, Vector2 b)
+    {
+        return a.X != b.X &&
+               a.Y != b.Y;
+    }
+
+    public static bool operator !=(Vector2 a, float b)
+    {
+        return a.X != b &&
+               a.Y != b;
+    }
+
+    public static bool operator !=(float a, Vector2 b)
+    {
+        return a != b.X &&
+               a != b.Y;
+    }
+
+    // 
+    // --------------------------------------------------
+
+    public override bool Equals([NotNullWhen(true)] object? obj)
+    {
+        return base.Equals(obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
     }
 }

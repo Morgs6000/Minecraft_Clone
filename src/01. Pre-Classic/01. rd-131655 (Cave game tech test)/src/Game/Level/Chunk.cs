@@ -45,8 +45,6 @@ public class Chunk
 
     public void PopulateBlocks()
     {
-        // Debug.Log($"PopulateBlock no chunk {_position}");
-
         _blocks = new byte[_size * _size * _size];
         _lightDepths = new int[_world.Width * _world.Depth];
 
