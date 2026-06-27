@@ -39,7 +39,7 @@ public static class SystemInfo
     }
 }
 
-    public static string FormatBytes(long bytes)
+    public static string FormatBytes(long bytes, bool hasSuffix = true)
     {
         string[] sizes = { "B", "KB", "MB", "GB" };
         int order = 0;
@@ -51,7 +51,7 @@ public static class SystemInfo
             size /= 1024;
         }
 
-        return $"{size:F0} {sizes[order]}";
+        return hasSuffix ? $"{size:F0} {sizes[order]}" : $"{size:F0}";
     }
 
     /// <summary>

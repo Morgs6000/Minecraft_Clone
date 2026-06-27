@@ -109,7 +109,7 @@ public class Input
         .ToHashSet();
 
     private readonly static Dictionary<KeyCode, float> _lastPressTime = [];
-    private const float _doublePressedTime = 0.2f;
+    private const float _doublePressedTime = 0.3f;
 
     //
     // --------------------------------------------------

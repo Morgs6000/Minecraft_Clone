@@ -7,6 +7,7 @@ namespace RubyDung;
 public class DebugHotkeys
 {
     public static bool Pressed = false;
+    public static bool ShowGameModeSwitcher = false;
 
     // 
     // --------------------------------------------------
@@ -47,6 +48,8 @@ public class DebugHotkeys
             _f3Alone = false;
 
             Pressed = false;
+
+            ShowGameModeSwitcher = false;
         }
     }
 
@@ -75,6 +78,8 @@ public class DebugHotkeys
     {
         if (Input.GetKeyDown(KeyCode.F4))
         {
+            ShowGameModeSwitcher = true;
+
             switch (Game.Mode)
             {
                 case GameMode.Creative:

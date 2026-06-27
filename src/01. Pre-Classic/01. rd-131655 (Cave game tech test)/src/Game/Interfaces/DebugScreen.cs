@@ -147,11 +147,13 @@ public class DebugScreen
         //      Memory: 0 / 0 B
         _memory =
             $"Memory: {percent} " +
-            $"{SystemInfo.FormatBytes(used)} / " +
+            $"{SystemInfo.FormatBytes(used, false)} / " +
             $"{SystemInfo.FormatBytes(total)}";
+
+        string maxPercent = (total > 0) ? $"{((float)_maxMemoryUsed / total * 100.0f):F0}%" : "N/A";
         
         _memoryMax =
-            $"(MaxUsed: {SystemInfo.FormatBytes(_maxMemoryUsed)})";
+            $"(MaxUsed: {maxPercent} {SystemInfo.FormatBytes(_maxMemoryUsed)})";
     }
 
     private void CalculateCPU()

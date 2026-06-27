@@ -71,6 +71,11 @@ public class Interface
         ScreenWidth = Screen.Width / _scaleFactor;
         ScreenHeight = Screen.Height / _scaleFactor;
 
+        // game mode switcher
+        // --------------------------------------------------
+
+        _gameModeSwitcher.Update();
+
         // debug screen
         // --------------------------------------------------
 
@@ -104,7 +109,10 @@ public class Interface
             // game mode switcher
             // --------------------------------------------------
 
-            _gameModeSwitcher.Draw(_shader);
+            if (DebugHotkeys.ShowGameModeSwitcher)
+            {
+                _gameModeSwitcher.Draw(_shader);
+            }
 
             // debug screen
             // --------------------------------------------------

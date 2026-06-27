@@ -168,14 +168,23 @@ public class GameModeSwitcher
         // --------------------------------------------------
 
         _font = new Font();
+    }
 
-        _font.Mesh.Clear();
+    public void Update()
+    {
+        float w = Interface.ScreenWidth / 2;
+        float h = Interface.ScreenHeight / 2;
 
-        string str0 = "Creative Mode";
+        // float largura_0 = 125.0f;
+        float altura_0 = 75.0f;
+
+        string str0 = $"{Game.Mode} Mode";
         string str1 = "[ F4 ]";
         string str2 = "Next";
 
         // Debug.Log(Color.FromHex("#54FCFC").ToDecimalString());
+
+        _font.Mesh.Clear();
 
         _font.DrawShadow(
             str0,

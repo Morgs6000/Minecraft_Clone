@@ -145,7 +145,9 @@ public class Player : Camera
         {
             OnFly = !OnFly;
         }
-        if (OnGround)
+        if (Game.Mode == GameMode.Survival ||
+            Game.Mode == GameMode.Adventure ||
+            OnGround)
         {
             OnFly = false;
         }
