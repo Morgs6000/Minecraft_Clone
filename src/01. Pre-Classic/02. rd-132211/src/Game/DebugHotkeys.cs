@@ -1,6 +1,7 @@
 using GameEngine.Core;
 using GameEngine.Inputs;
 using GameEngine.Rendering;
+using RubyDung.Interfaces;
 
 namespace RubyDung;
 
@@ -42,7 +43,7 @@ public class DebugHotkeys
         {
             if (_f3Alone)
             {
-                Game.DebugScreen = !Game.DebugScreen;
+                Interface.DebugScreen = !Interface.DebugScreen;
             }
 
             _f3Alone = false;

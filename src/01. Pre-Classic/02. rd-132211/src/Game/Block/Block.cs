@@ -1,6 +1,7 @@
 using GameEngine.Mathematics;
 using GameEngine.Meshing;
 using RubyDung.Level;
+using RubyDung.Physics;
 
 namespace RubyDung.Blocks;
 
@@ -283,5 +284,18 @@ public class Block
                 texCoords
             );
         }
+    }
+
+    public virtual AABB GetBounds(int x, int y, int z)
+    {
+        return new AABB(
+            new Vector3((float)x, (float)y, (float)z),
+            new Vector3((float)(x + 1), (float)(y + 1), (float)(z + 1))
+        );
+    }
+
+    public virtual bool IsSolid()
+    {
+        return true;
     }
 }

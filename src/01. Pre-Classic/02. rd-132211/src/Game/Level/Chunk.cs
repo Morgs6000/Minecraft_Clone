@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using GameEngine.Mathematics;
 using GameEngine.Meshing;
 using GameEngine.Rendering;
@@ -63,7 +64,7 @@ public class Chunk
                     );
 
                     int id = 0;
-                    
+
                     if (position.Z == _world.Height * 2 / 3)
                     {
                         id = Block.Grass.ID;
@@ -79,7 +80,10 @@ public class Chunk
             }
         }
 
-        // CalcLightDepths(0, 0, _world.Width, _world.Depth);
+        if (File.Exists(GetChunkFilePath()))
+        {
+            Load();
+        }
     }
 
     // 
@@ -129,6 +133,69 @@ public class Chunk
     // 
     // --------------------------------------------------
 
+    public void Load()
+    {
+        string fileName = GetChunkFilePath();
+
+        try
+        {
+            using (FileStream fs = new FileStream(fileName, FileMode.Open))
+            using (GZipStream gs = new GZipStream(fs, CompressionMode.Decompress))
+            using (BinaryReader br = new BinaryReader(gs))
+            {
+                br.Read(_blocks, 0, _blocks.Length);
+
+                // CalcLightDepths(0, 0, _size, _size);
+
+                // foreach (LevelListener listener in _levelListerners)
+                // {
+                //     listener.AllChanged();
+                // }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e.StackTrace);
+        }
+    }
+
+    public void Save()
+    {
+        string fileName = GetChunkFilePath();
+
+        try
+        {
+            using (FileStream fs = new FileStream(fileName, FileMode.Create))
+            using (GZipStream gs = new GZipStream(fs, CompressionMode.Compress))
+            using (BinaryWriter bw = new BinaryWriter(gs))
+            {
+                bw.Write(_blocks);
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e.StackTrace);
+        }
+    }
+    
+    private string GetChunkFilePath()
+    {
+        int x = _position.X / World.ChunkSize;
+        int y = _position.Y / World.ChunkSize;
+        int z = _position.Z / World.ChunkSize;
+
+        // Cria o diretório: saves/X_Y/
+        string saveDir = Path.Combine("saves", "New World", $"chunk_{x}_{y}");
+
+        if (!Directory.Exists(saveDir))
+        {
+            Directory.CreateDirectory(saveDir); // garante que a pasta existe
+        }
+
+        // Nome do arquivo: chunk_Z.dat
+        return Path.Combine(saveDir, $"chunk_{z}.dat");
+    }
+
     public int GetBlock(int x, int y, int z)
     {
         if (x >= 0 && x < _size &&
@@ -149,7 +216,10 @@ public class Chunk
 
     public void CalcLightDepths(int x0, int y0, int x1, int y1)
     {
-        _world.CalcLightDepths(x0, y0, x1, y1);
+        int globalX0 = x0 + _position.X;
+        int globalY0 = y0 + _position.Y;
+
+        _world.CalcLightDepths(globalX0, globalY0, x1, y1);
     }
 
     public float GetBrightness(int x, int y, int z)
@@ -168,9 +238,13 @@ public class Chunk
 
             CalcLightDepths(x, y, 1, 1);
 
+            int globalX = x + _position.X;
+            int globalY = y + _position.Y;
+            int globalZ = z + _position.Z;
+
             for (int j = 0; j < _levelListerners.Count; j++)
             {
-                _levelListerners[j].BlockChanged(x, y, z);
+                _levelListerners[j].BlockChanged(globalX, globalY, globalZ);
             }
         }
     }

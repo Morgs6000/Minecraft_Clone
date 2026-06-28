@@ -5,6 +5,7 @@ using GameEngine.Meshing;
 using GameEngine.Rendering;
 using RubyDung.Blocks;
 using RubyDung.Level;
+using RubyDung.Physics;
 using Silk.NET.OpenGL;
 
 namespace RubyDung;
@@ -58,45 +59,53 @@ public class BlockInteraction
 
             RenderHit(_hitResult);
 
-            if (Input.GetKeyDown(KeyCode.MouseRight))
+            if (Game.Mode == GameMode.Survival || Game.Mode == GameMode.Creative)
             {
-                _world.SetBlock(x, y, z, 0);
-            }
-            if (Input.GetKeyDown(KeyCode.MouseLeft))
-            {
-                if (_hitResult.F == 0)
+                if (Input.GetKeyDown(KeyCode.MouseRight))
                 {
-                    x--;
+                    _world.SetBlock(x, y, z, 0);
                 }
-                if (_hitResult.F == 1)
+                if (Input.GetKeyDown(KeyCode.MouseLeft))
                 {
-                    x++;
-                }
-                if (_hitResult.F == 2)
-                {
-                    y--;
-                }
-                if (_hitResult.F == 3)
-                {
-                    y++;
-                }
-                if (_hitResult.F == 4)
-                {
-                    z--;
-                }
-                if (_hitResult.F == 5)
-                {
-                    z++;
-                }
+                    if (_hitResult.F == (int)MeshQuadFace.Negative_X)
+                    {
+                        x--;
+                    }
+                    if (_hitResult.F == (int)MeshQuadFace.Positive_X)
+                    {
+                        x++;
+                    }
+                    if (_hitResult.F == (int)MeshQuadFace.Negative_Y)
+                    {
+                        y--;
+                    }
+                    if (_hitResult.F == (int)MeshQuadFace.Positive_Y)
+                    {
+                        y++;
+                    }
+                    if (_hitResult.F == (int)MeshQuadFace.Negative_Z)
+                    {
+                        z--;
+                    }
+                    if (_hitResult.F == (int)MeshQuadFace.Positive_Z)
+                    {
+                        z++;
+                    }
 
-                int b = Block.Rock.ID;
+                    int b = Block.Rock.ID;
 
-                if (z == _world.Height * 2 / 3)
-                {
-                    b = Block.Grass.ID;
+                    if (z == _world.Height * 2 / 3)
+                    {
+                        b = Block.Grass.ID;
+                    }
+
+                    AABB bounds = Block.Blocks[b].GetBounds(x, y, z);
+
+                    if (bounds == null || IsFree(bounds))
+                    {
+                        _world.SetBlock(x, y, z, b);
+                    }
                 }
-
-                _world.SetBlock(x, y, z, b);
             }
         }
         else
@@ -184,21 +193,30 @@ public class BlockInteraction
                 pos.X += step.X;
                 dist = tMax.X;
                 tMax.X += tDelta.X;
-                face = step.X > 0 ? 0 : 1;  // 0: +X, 1: -X
+                face = step.X > 0 ?
+                    (int)MeshQuadFace.Negative_X : 
+                    (int)MeshQuadFace.Positive_X;  
+                    // 0: +X, 1: -X
             }
             else if (tMax.Y < tMax.Z)
             {
                 pos.Y += step.Y;
                 dist = tMax.Y;
                 tMax.Y += tDelta.Y;
-                face = step.Y > 0 ? 2 : 3;  // 2: +Y (frente), 3: -Y (trás)
+                face = step.Y > 0 ?
+                    (int)MeshQuadFace.Negative_Y :
+                    (int)MeshQuadFace.Positive_Y;  
+                    // 2: +Y (frente), 3: -Y (trás)
             }
             else
             {
                 pos.Z += step.Z;
                 dist = tMax.Z;
                 tMax.Z += tDelta.Z;
-                face = step.Z > 0 ? 4 : 5;  // 4: +Z (cima), 5: -Z (baixo)
+                face = step.Z > 0 ?
+                    (int)MeshQuadFace.Negative_Z :
+                    (int)MeshQuadFace.Positive_Z;  
+                    // 4: +Z (cima), 5: -Z (baixo)
             }
         }
 
@@ -216,5 +234,15 @@ public class BlockInteraction
 
         // _meshRenderer = new MeshRenderer();
         _meshRenderer.Mesh = _mesh;
+    }
+    
+    private bool IsFree(AABB bounds)
+    {
+        if (_player.Bounds.Intersects(bounds))
+        {
+            return false;
+        }
+        
+        return true;
     }
 }

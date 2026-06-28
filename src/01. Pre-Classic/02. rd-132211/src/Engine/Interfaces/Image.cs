@@ -62,15 +62,21 @@ public class Image : RectTransform
 
         if (Texture != null)
         {
-            float u0 = UVRect.X;
-            float v0 = UVRect.Y;
+            float u0;
+            float v0;
 
-            float u1 = u0 + UVRect.Z;
-            float v1 = v0 + UVRect.W;
+            float u1;
+            float v1;
 
-            Debug.LogWarning("Quando não declarar UVRect, deveria retornar a imagem inteira.");
+            if (UVRect == new Vector4(0.0f, 0.0f, 1.0f, 1.0f))
+            {
+                u0 = UVRect.X;
+                v0 = UVRect.Y;
 
-            // if (UVRect != new Vector4(0.0f, 0.0f, 1.0f, 1.0f))
+                u1 = UVRect.Z;
+                v1 = UVRect.W;
+            }
+            else
             {
                 u0 = UVRect.X / Texture.Widht;
                 v0 = UVRect.Y / Texture.Height;

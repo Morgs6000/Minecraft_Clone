@@ -17,9 +17,13 @@ public class Player : Camera
 
     // 
     // --------------------------------------------------
+    
+    public AABB Bounds { get; private set; } = null!;
+
+    // 
+    // --------------------------------------------------
 
     private World _world;
-    private AABB _bounds = null!;
 
     private Vector3 _delta = Vector3.Zero;
 
@@ -216,22 +220,22 @@ public class Player : Camera
         float _z = position.Z - _offsetHeight + _h;
 
         // Vetores min e max da caixa de colisão
-        _bounds = new AABB(
+        Bounds = new AABB(
             new Vector3(_x - _w, _y - _w, _z - _h),
             new Vector3(_x + _w, _y + _w, _z + _h)
         );
 
         // Limites inteiros para verificar blocos
         Vector3Int min = new Vector3Int(
-            Mathf.FloorToInt(_bounds.Min.X),
-            Mathf.FloorToInt(_bounds.Min.Y),
-            Mathf.FloorToInt(_bounds.Min.Z)
+            Mathf.FloorToInt(Bounds.Min.X),
+            Mathf.FloorToInt(Bounds.Min.Y),
+            Mathf.FloorToInt(Bounds.Min.Z)
         );
 
         Vector3Int max = new Vector3Int(
-            Mathf.CeilToInt(_bounds.Max.X),
-            Mathf.CeilToInt(_bounds.Max.Y),
-            Mathf.CeilToInt(_bounds.Max.Z)
+            Mathf.CeilToInt(Bounds.Max.X),
+            Mathf.CeilToInt(Bounds.Max.Y),
+            Mathf.CeilToInt(Bounds.Max.Z)
         );
 
         // Verifica colisão com cada bloco possível
@@ -250,7 +254,7 @@ public class Player : Camera
                         );
 
                         // Verifica se as caixas AABB se intersectam
-                        if (_bounds.Intersects(bounds))
+                        if (Bounds.Intersects(bounds))
                         {
                             return true;
                         }

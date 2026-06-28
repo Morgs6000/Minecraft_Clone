@@ -1,4 +1,5 @@
 using GameEngine.Core;
+using GameEngine.Inputs;
 using GameEngine.Interfaces;
 using GameEngine.Mathematics;
 using GameEngine.Rendering;
@@ -14,6 +15,8 @@ public class Interface
     public static float ScreenWidth { get; private set; }
     public static float ScreenHeight { get; private set; }
 
+    public static bool DebugScreen = true;
+
     // 
     // --------------------------------------------------
 
@@ -24,6 +27,8 @@ public class Interface
 
     private GameModeSwitcher _gameModeSwitcher = null!;
     private HeightLimit _heightLimit = null!;
+    private Saving _saving = null!;
+
     private DebugScreen _debugScreen = null!;
 
     private float _scaleFactor = 2.0f;
@@ -44,18 +49,12 @@ public class Interface
 
         _shader = new("interface");
 
-        // game mode switcher
+        // 
         // --------------------------------------------------
 
         _gameModeSwitcher = new GameModeSwitcher();
-
-        // height limit
-        // --------------------------------------------------
-
         _heightLimit = new HeightLimit();
-
-        // debug screen
-        // --------------------------------------------------
+        _saving = new Saving();
 
         _debugScreen = new DebugScreen();
     }
@@ -79,24 +78,23 @@ public class Interface
         ScreenWidth = Screen.Width / _scaleFactor;
         ScreenHeight = Screen.Height / _scaleFactor;
 
-        // game mode switcher
+        // 
         // --------------------------------------------------
 
         if (DebugHotkeys.ShowGameModeSwitcher)
         {
             _gameModeSwitcher.Update();
         }
-
-        // height limit
-        // --------------------------------------------------
-
         if (World.OnHeightLimit)
         {
             _heightLimit.Update();
         }
+        if (Input.GetKeyDown(KeyCode.Enter))
+        {
+            _saving.Start();
+        }
 
-        // debug screen
-        // --------------------------------------------------
+        _saving.Update();
 
         _debugScreen.SetCamera(_player);
         _debugScreen.Update();
@@ -127,26 +125,21 @@ public class Interface
         _gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
         {
-            // game mode switcher
-            // --------------------------------------------------
-
             if (DebugHotkeys.ShowGameModeSwitcher)
             {
                 _gameModeSwitcher.Draw(_shader);
             }
-
-            // height limit
-            // --------------------------------------------------
-
             if (World.OnHeightLimit)
             {
                 _heightLimit.Draw(_shader);
             }
 
-            // debug screen
-            // --------------------------------------------------
+            _saving.Draw(_shader);
 
-            _debugScreen.Draw(_shader);
+            if (DebugScreen) 
+            {
+                _debugScreen.Draw(_shader);
+            }
         }
 
         _gl.Disable(EnableCap.Blend);

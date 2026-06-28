@@ -9,7 +9,7 @@ public class Debug
     /// Registra a mensagem no Console.
     /// </summary>
     /// <param name="menssage">Texto ou objeto a ser convertido em representação de texto para exibição.</param>
-    public static void Log(object menssage)
+    public static void Log(object? menssage)
     {
         WriteLine(menssage);
     }
@@ -18,7 +18,7 @@ public class Debug
     /// Uma variante de Debug.Log que registra uma mensagem de aviso no console.
     /// </summary>
     /// <param name="menssage">Texto ou objeto a ser convertido em representação de texto para exibição.</param>
-    public static void LogWarning(object menssage)
+    public static void LogWarning(object? menssage)
     {
         WriteLine(menssage, ConsoleColor.Yellow);
     }
@@ -27,14 +27,14 @@ public class Debug
     /// Uma variante de Debug.Log que registra uma mensagem de erro no console.
     /// </summary>
     /// <param name="menssage">Texto ou objeto a ser convertido em representação de texto para exibição.</param>
-    public static void LogError(object menssage)
+    public static void LogError(object? menssage)
     {
         WriteLine(menssage, ConsoleColor.Red);
     }
     
     // --------------------------------------------------
 
-    private static void WriteLine(object menssage, ConsoleColor? color = null)
+    private static void WriteLine(object? menssage, ConsoleColor? color = null)
     {
         Console.Write(DateTime.Now.ToString("[HH:mm:ss] "));
 

@@ -94,25 +94,25 @@ public class World : LevelListener
 
     public void SetChunk(int x0, int y0, int z0, int x1, int y1, int z1)
     {
-        // Converte para índices de chunk usando divisão inteira (trunca para baixo)
-        int cx0 = x0 / ChunkSize;
-        int cy0 = y0 / ChunkSize;
-        int cz0 = z0 / ChunkSize;
+        // Converte para índices de chunk: inferior com Floor, superior com Ceil
+        int cx0 = Mathf.FloorToInt((float)x0 / ChunkSize);
+        int cy0 = Mathf.FloorToInt((float)y0 / ChunkSize);
+        int cz0 = Mathf.FloorToInt((float)z0 / ChunkSize);
 
-        int cx1 = x1 / ChunkSize;
-        int cy1 = y1 / ChunkSize;
-        int cz1 = z1 / ChunkSize;
+        int cx1 = Mathf.CeilToInt((float)x1 / ChunkSize);
+        int cy1 = Mathf.CeilToInt((float)y1 / ChunkSize);
+        int cz1 = Mathf.CeilToInt((float)z1 / ChunkSize);
 
-        // Ajusta os limites para dentro do array de chunks
+        // Limita os índices ao intervalo válido
         cx0 = Math.Max(cx0, 0);
         cy0 = Math.Max(cy0, 0);
         cz0 = Math.Max(cz0, 0);
 
-        cx1 = Math.Min(cx1, _xChunks); // não subtrai 1
+        cx1 = Math.Min(cx1, _xChunks);
         cy1 = Math.Min(cy1, _yChunks);
         cz1 = Math.Min(cz1, _zChunks);
 
-        // Itera sobre os chunks no intervalo [cx0, cx1) etc.
+        // Reconstroi os chunks no intervalo [cx0, cx1) etc.
         for (int x = cx0; x < cx1; x++)
         {
             for (int y = cy0; y < cy1; y++)
@@ -156,6 +156,14 @@ public class World : LevelListener
     // 
     // --------------------------------------------------
 
+    public void Save()
+    {
+        foreach (Chunk chunk in _chunks)
+        {
+            chunk.Save();
+        }
+    }
+
     public int GetBlock(int x, int y, int z)
     {
         int cx = Mathf.FloorToInt((float)x / ChunkSize);
@@ -190,7 +198,9 @@ public class World : LevelListener
         if (cx < 0 || cx >= _xChunks ||
             cy < 0 || cy >= _yChunks ||
             cz < 0 || cz >= _zChunks)
+        {
             return false;
+        }
 
         // Obter o chunk correspondente
         int index = (cx + cy * _xChunks) * _zChunks + cz;
@@ -204,7 +214,7 @@ public class World : LevelListener
         // Chamar o método IsBlock do chunk (que verifica localmente)
         Block block = Block.Blocks[chunk.GetBlock(localX, localY, localZ)];
         
-        return block != null ? true : false;
+        return block != null ? block.IsSolid() : false;
     }   
 
     public void CalcLightDepths(int x0, int y0, int x1, int y1)
@@ -213,7 +223,7 @@ public class World : LevelListener
         {
             for (int y = y0; y < y0 + y1; y++)
             {
-                int i = y + y * Width;
+                int i = x + y * Width;
                 int oldDepth = _lightDepths[i];
 
                 int z;
@@ -242,7 +252,9 @@ public class World : LevelListener
     public float GetBrightness(int x, int y, int z)
     {
         float light = 1.0f;
-        float dark = 0.8f;
+
+        // float dark = 0.8f;
+        float dark = 0.4f;
 
         if (x >= 0 && x < Width &&
             y >= 0 && y < Depth &&

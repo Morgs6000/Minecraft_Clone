@@ -13,8 +13,6 @@ public class Game : Engine
 {
     public static string Version = GetRootFolderName.NomeSemPrefixo;
 
-    public static bool DebugScreen = true;
-
     public static GameMode Mode = GameMode.Survival;
 
     // 
@@ -91,6 +89,14 @@ public class Game : Engine
         // 
         // --------------------------------------------------
 
+        if (Input.GetKeyDown(KeyCode.Enter))
+        {
+            _world.Save();
+        }
+
+        // 
+        // --------------------------------------------------
+
         DebugHotkeys.Update();
         
         if (_load)
@@ -137,14 +143,11 @@ public class Game : Engine
         // interface
         // --------------------------------------------------
 
-        if (DebugScreen)
-        {
-            _interface.Draw();
-        }
+        _interface.Draw();
     }
 
     protected override void OnClosing()
     {
-        
+        _world.Save();
     }
 }
