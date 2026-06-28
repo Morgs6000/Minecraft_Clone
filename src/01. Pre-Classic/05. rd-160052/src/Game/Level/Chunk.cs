@@ -113,7 +113,7 @@ public class Chunk
 
                     if (blockID > 0)
                     {
-                        Block.Blocks[blockID].SetupBlock(_mesh, this, position);
+                        Block.Blocks[blockID].SetupBlock(_mesh, _world, position);
                     }
                 }
             }

@@ -23,11 +23,13 @@ public class Interface
     private GL _gl = Engine.GL;
 
     private ShaderProgram _shader = null!;
+    private World _world = null!;
     private Player _player = null!;
 
     private GameModeSwitcher _gameModeSwitcher = null!;
     private HeightLimit _heightLimit = null!;
     private Saving _saving = null!;
+    private SelectedBlock _selectedBlock = null!;
 
     private DebugScreen _debugScreen = null!;
 
@@ -36,8 +38,10 @@ public class Interface
     // Construtor
     // --------------------------------------------------
 
-    public Interface()
+    public Interface(World world)
     {
+        _world = world;
+
         // screen size
         // --------------------------------------------------
 
@@ -52,9 +56,10 @@ public class Interface
         // 
         // --------------------------------------------------
 
-        _gameModeSwitcher = new GameModeSwitcher();
+        _gameModeSwitcher = new GameModeSwitcher(_world);
         _heightLimit = new HeightLimit();
         _saving = new Saving();
+        _selectedBlock = new SelectedBlock(world);
 
         _debugScreen = new DebugScreen();
     }
@@ -62,7 +67,7 @@ public class Interface
     // 
     // --------------------------------------------------
 
-    public void SetCamera(Player player)
+    public void SetPlayer(Player player)
     {
         _player = player;
     }
@@ -95,6 +100,7 @@ public class Interface
         }
 
         _saving.Update();
+        _selectedBlock.Update();
 
         _debugScreen.SetCamera(_player);
         _debugScreen.Update();
@@ -135,6 +141,7 @@ public class Interface
             }
 
             _saving.Draw(_shader);
+            _selectedBlock.Draw(_shader);
 
             if (DebugScreen) 
             {

@@ -9,8 +9,12 @@ public class Block
 {
     public static readonly Block[] Blocks = new Block[256];
 
+    public static readonly Block Empty = null!;
     public static readonly Block Rock = new BlockRock(id: 1);
     public static readonly Block Grass = new BlockGrass(id: 2);
+    public static readonly Block Dirt = new BlockDirt(id: 3);
+    public static readonly Block StoneBrick = new BlockStoneBrick(id: 4);
+    public static readonly Block Wood = new BlockWood(id: 5);
 
     public int ID { get; protected set; }
     public string TextualID { get; protected set; } = null!;
@@ -28,64 +32,64 @@ public class Block
         _tex = tex;
     }
 
-    public void SetupBlock(MeshCube mesh, Chunk chunk, Vector3Int position)
+    public void SetupBlock(MeshCube mesh, World world, Vector3Int position)
     {
         int x = position.X;
         int y = position.Y;
         int z = position.Z;
 
-        SetupBlock(mesh, chunk, x, y, z);
+        SetupBlock(mesh, world, x, y, z);
     }
 
-    public void SetupBlock(MeshCube mesh, Chunk chunk, int x, int y, int z)
+    public void SetupBlock(MeshCube mesh, World world, int x, int y, int z)
     {
         float c1 = 0.6f;
         float c2 = 0.8f;
         float c3 = 1.0f;
 
-        if (!chunk.IsSolidBlock(x - 1, y, z))
+        if (!world.IsSolidBlock(x - 1, y, z))
         {
-            float br = chunk.GetBrightness(x - 1, y, z) * c1;
+            float br = world.GetBrightness(x - 1, y, z) * c1;
 
             mesh.SetColors(br, br, br);
 
             AddFaceWithUV(mesh, x, y, z, MeshQuadFace.Negative_X);
         }
-        if (!chunk.IsSolidBlock(x + 1, y, z))
+        if (!world.IsSolidBlock(x + 1, y, z))
         {
-            float br = chunk.GetBrightness(x + 1, y, z) * c1;
+            float br = world.GetBrightness(x + 1, y, z) * c1;
 
             mesh.SetColors(br, br, br);
 
             AddFaceWithUV(mesh, x, y, z, MeshQuadFace.Positive_X);
         }
-        if (!chunk.IsSolidBlock(x, y - 1, z))
+        if (!world.IsSolidBlock(x, y - 1, z))
         {
-            float br = chunk.GetBrightness(x, y - 1, z) * c2;
+            float br = world.GetBrightness(x, y - 1, z) * c2;
 
             mesh.SetColors(br, br, br);
 
             AddFaceWithUV(mesh, x, y, z, MeshQuadFace.Negative_Y);
         }
-        if (!chunk.IsSolidBlock(x, y + 1, z))
+        if (!world.IsSolidBlock(x, y + 1, z))
         {
-            float br = chunk.GetBrightness(x, y + 1, z) * c2;
+            float br = world.GetBrightness(x, y + 1, z) * c2;
 
             mesh.SetColors(br, br, br);
 
             AddFaceWithUV(mesh, x, y, z, MeshQuadFace.Positive_Y);
         }
-        if (!chunk.IsSolidBlock(x, y, z - 1))
+        if (!world.IsSolidBlock(x, y, z - 1))
         {
-            float br = chunk.GetBrightness(x, y, z - 1) * c3;
+            float br = world.GetBrightness(x, y, z - 1) * c3;
 
             mesh.SetColors(br, br, br);
 
             AddFaceWithUV(mesh, x, y, z, MeshQuadFace.Negative_Z);
         }
-        if (!chunk.IsSolidBlock(x, y, z + 1))
+        if (!world.IsSolidBlock(x, y, z + 1))
         {
-            float br = chunk.GetBrightness(x, y, z + 1) * c3;
+            float br = world.GetBrightness(x, y, z + 1) * c3;
 
             mesh.SetColors(br, br, br);
 

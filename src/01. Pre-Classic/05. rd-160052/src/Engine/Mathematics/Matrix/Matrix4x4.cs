@@ -49,7 +49,7 @@ public struct Matrix4x4
         return System.Numerics.Matrix4x4.CreateTranslation(position);
     }
 
-    public static Matrix4x4 Translate(float x, float y, float z)
+    public static Matrix4x4 Translate(float x, float y, float z = 0.0f)
     {
         return System.Numerics.Matrix4x4.CreateTranslation(x, y, z);
     }
@@ -64,7 +64,7 @@ public struct Matrix4x4
     /// <param name="y"></param>
     /// <param name="z"></param>
     /// <returns></returns>
-    public static Matrix4x4 Scale(float x, float y, float z)
+    public static Matrix4x4 Scale(float x, float y, float z = 0.0f)
     {
         return System.Numerics.Matrix4x4.CreateScale(x, y, z);
     }

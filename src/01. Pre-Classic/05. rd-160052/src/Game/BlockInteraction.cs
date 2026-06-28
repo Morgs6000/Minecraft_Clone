@@ -4,6 +4,7 @@ using GameEngine.Mathematics;
 using GameEngine.Meshing;
 using GameEngine.Rendering;
 using RubyDung.Blocks;
+using RubyDung.Interfaces;
 using RubyDung.Level;
 using RubyDung.Physics;
 using Silk.NET.OpenGL;
@@ -92,12 +93,7 @@ public class BlockInteraction
                         z++;
                     }
 
-                    int b = Block.Rock.ID;
-
-                    if (z == _world.Height * 2 / 3)
-                    {
-                        b = Block.Grass.ID;
-                    }
+                    int b = SelectedBlock.PaintTextue;
 
                     AABB bounds = Block.Blocks[b].GetBounds(x, y, z);
 

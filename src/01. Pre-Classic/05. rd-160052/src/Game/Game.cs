@@ -70,8 +70,8 @@ public class Game : Engine
         // interface
         // --------------------------------------------------
 
-        _interface = new Interface();
-        _interface.SetCamera(_player);
+        _interface = new Interface(_world);
+        _interface.SetPlayer(_player);
     }
 
     protected override void OnResize(Vector2D<int> newSize)

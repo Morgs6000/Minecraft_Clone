@@ -68,9 +68,9 @@ public struct Mathf
     /// <param name="value"></param>
     /// <param name="min"></param>
     /// <param name="max"></param>
-    public static float Clamp(int value, float min, float max) // ARRUMA ISSO AQUI
+    public static int Clamp(int value, float min, float max) // ARRUMA ISSO AQUI
     {
-        return (float)System.Math.Clamp(value, min, max);
+        return (int)System.Math.Clamp(value, min, max);
     }
 
     // Max

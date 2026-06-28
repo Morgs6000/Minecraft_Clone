@@ -1,7 +1,7 @@
 ﻿#region 
 /*
 
-Wiki: https://minecraft.wiki/w/Java_Edition_pre-Classic_rd-132211
+Wiki: https://minecraft.wiki/w/Java_Edition_pre-Classic_rd-160052
 
 */
 #endregion
