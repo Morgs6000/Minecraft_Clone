@@ -29,6 +29,7 @@ public class Interface
     private GameModeSwitcher _gameModeSwitcher = null!;
     private HeightLimit _heightLimit = null!;
     private Saving _saving = null!;
+    private Crosshair _crosshair = null!;
     private SelectedBlock _selectedBlock = null!;
 
     private DebugScreen _debugScreen = null!;
@@ -59,6 +60,7 @@ public class Interface
         _gameModeSwitcher = new GameModeSwitcher(_world);
         _heightLimit = new HeightLimit();
         _saving = new Saving();
+        _crosshair = new Crosshair();
         _selectedBlock = new SelectedBlock(world);
 
         _debugScreen = new DebugScreen();
@@ -141,6 +143,7 @@ public class Interface
             }
 
             _saving.Draw(_shader);
+            _crosshair.Draw(_shader);
             _selectedBlock.Draw(_shader);
 
             if (DebugScreen) 

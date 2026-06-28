@@ -139,8 +139,13 @@ public class GameModeSwitcher
         float w = Interface.ScreenWidth / 2;
         float h = Interface.ScreenHeight / 2;
 
+        float posX = w + _slot[0].Position.X;
+        float posY = h;
+
+        // Debug.Log(_slot[0].Position);
+
         // Posiciona na tela (Coordenadas de Pixel, já que a projeção é ortográfica)
-        model *= Matrix4x4.Translate(w - 45, h);
+        model *= Matrix4x4.Translate(posX, posY);
 
         shader.SetUniform("model", model);
 
