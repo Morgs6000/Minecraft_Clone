@@ -9,6 +9,13 @@ public class World : LevelListener
 {
     public static readonly int ChunkSize = 16;
 
+    public static int HeightLimit { get; private set; }
+    public static bool OnHeightLimit { get; set; } = false;
+    public static float HeightLimitStartTime { get; private set; } = 0.0f;
+
+    // 
+    // --------------------------------------------------
+
     public readonly int Width;
     public readonly int Depth;
     public readonly int Height;
@@ -31,6 +38,8 @@ public class World : LevelListener
 
     public World(int w, int d, int h)
     {
+        HeightLimit = h;
+
         Width = w;
         Depth = d;
         Height = h;
@@ -85,44 +94,30 @@ public class World : LevelListener
 
     public void SetChunk(int x0, int y0, int z0, int x1, int y1, int z1)
     {
-        x0 /= ChunkSize;
-        y0 /= ChunkSize;
-        z0 /= ChunkSize;
+        // Converte para índices de chunk usando divisão inteira (trunca para baixo)
+        int cx0 = x0 / ChunkSize;
+        int cy0 = y0 / ChunkSize;
+        int cz0 = z0 / ChunkSize;
 
-        x1 /= ChunkSize;
-        y1 /= ChunkSize;
-        z1 /= ChunkSize;
+        int cx1 = x1 / ChunkSize;
+        int cy1 = y1 / ChunkSize;
+        int cz1 = z1 / ChunkSize;
 
-        if (x0 < 0)
-        {
-            x0 = 0;
-        }
-        if (y0 < 0)
-        {
-            y0 = 0;
-        }
-        if (z0 < 0)
-        {
-            z0 = 0;
-        }
-        if (x1 >= _xChunks)
-        {
-            x1 = _xChunks - 1;
-        }
-        if (y1 >= _yChunks)
-        {
-            y1 = _yChunks - 1;
-        }
-        if (z1 >= _zChunks)
-        {
-            z1 = _zChunks - 1;
-        }
+        // Ajusta os limites para dentro do array de chunks
+        cx0 = Math.Max(cx0, 0);
+        cy0 = Math.Max(cy0, 0);
+        cz0 = Math.Max(cz0, 0);
 
-        for (int x = x0; x < x1; x++)
+        cx1 = Math.Min(cx1, _xChunks); // não subtrai 1
+        cy1 = Math.Min(cy1, _yChunks);
+        cz1 = Math.Min(cz1, _zChunks);
+
+        // Itera sobre os chunks no intervalo [cx0, cx1) etc.
+        for (int x = cx0; x < cx1; x++)
         {
-            for (int y = y0; y < y1; y++)
+            for (int y = cy0; y < cy1; y++)
             {
-                for (int z = z0; z < z1; z++)
+                for (int z = cz0; z < cz1; z++)
                 {
                     int i = (x + y * _xChunks) * _zChunks + z;
                     _chunks[i].SetupChunk();
@@ -283,6 +278,18 @@ public class World : LevelListener
             BlockChanged(x, y, z);
             // Também recalcula a luz na coluna
             CalcLightDepths(x, y, 1, 1);
+        }
+        if (z >= Height)
+        {
+            // Height limit for building is 64 blocks.
+            // O limite de altura para construção é de 64 blocos.
+            // Debug.LogError($"O limite de altura para construção é de {Height} blocos.");
+
+            OnHeightLimit = true;
+
+            HeightLimitStartTime = Time.ElapsedTime;
+
+            return;
         }
     }
 }

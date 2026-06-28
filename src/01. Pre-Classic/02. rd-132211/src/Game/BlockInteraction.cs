@@ -62,6 +62,42 @@ public class BlockInteraction
             {
                 _world.SetBlock(x, y, z, 0);
             }
+            if (Input.GetKeyDown(KeyCode.MouseLeft))
+            {
+                if (_hitResult.F == 0)
+                {
+                    x--;
+                }
+                if (_hitResult.F == 1)
+                {
+                    x++;
+                }
+                if (_hitResult.F == 2)
+                {
+                    y--;
+                }
+                if (_hitResult.F == 3)
+                {
+                    y++;
+                }
+                if (_hitResult.F == 4)
+                {
+                    z--;
+                }
+                if (_hitResult.F == 5)
+                {
+                    z++;
+                }
+
+                int b = Block.Rock.ID;
+
+                if (z == _world.Height * 2 / 3)
+                {
+                    b = Block.Grass.ID;
+                }
+
+                _world.SetBlock(x, y, z, b);
+            }
         }
         else
         {

@@ -4,6 +4,7 @@ using GameEngine.Mathematics;
 using GameEngine.Rendering;
 using GameEngine.Utilities;
 using RubyDung;
+using RubyDung.Level;
 using Silk.NET.OpenGL;
 
 namespace RubyDung.Interfaces;
@@ -22,6 +23,7 @@ public class Interface
     private Player _player = null!;
 
     private GameModeSwitcher _gameModeSwitcher = null!;
+    private HeightLimit _heightLimit = null!;
     private DebugScreen _debugScreen = null!;
 
     private float _scaleFactor = 2.0f;
@@ -46,6 +48,11 @@ public class Interface
         // --------------------------------------------------
 
         _gameModeSwitcher = new GameModeSwitcher();
+
+        // height limit
+        // --------------------------------------------------
+
+        _heightLimit = new HeightLimit();
 
         // debug screen
         // --------------------------------------------------
@@ -78,6 +85,14 @@ public class Interface
         if (DebugHotkeys.ShowGameModeSwitcher)
         {
             _gameModeSwitcher.Update();
+        }
+
+        // height limit
+        // --------------------------------------------------
+
+        if (World.OnHeightLimit)
+        {
+            _heightLimit.Update();
         }
 
         // debug screen
@@ -120,6 +135,14 @@ public class Interface
                 _gameModeSwitcher.Draw(_shader);
             }
 
+            // height limit
+            // --------------------------------------------------
+
+            if (World.OnHeightLimit)
+            {
+                _heightLimit.Draw(_shader);
+            }
+
             // debug screen
             // --------------------------------------------------
 
@@ -136,12 +159,12 @@ public class Interface
     private Matrix4x4 GetProjectionMatrix()
     {
         return Matrix4x4.Orthographic(
-            left:   0.0f,
-            right:  ScreenWidth,
+            left: 0.0f,
+            right: ScreenWidth,
             bottom: 0.0f,
-            top:    ScreenHeight,
-            zNear:  0.3f,
-            zFar:   1000.0f
+            top: ScreenHeight,
+            zNear: 0.3f,
+            zFar: 1000.0f
         );
     }
 }

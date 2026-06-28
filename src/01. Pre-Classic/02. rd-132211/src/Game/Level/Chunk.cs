@@ -63,6 +63,7 @@ public class Chunk
                     );
 
                     int id = 0;
+                    
                     if (position.Z == _world.Height * 2 / 3)
                     {
                         id = Block.Grass.ID;
